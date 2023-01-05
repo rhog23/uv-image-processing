@@ -1,1 +1,2 @@
-# IF401_PengolahanCitra
+# Code Repository
+## Course: IF401-Pengolahan Citra
