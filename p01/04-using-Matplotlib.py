@@ -1,7 +1,7 @@
-import matplotlib.image as mpimg
+# import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 
-im = mpimg.imread("../images/1.png")
+im = plt.imread("../images/1.png")
 im1 = im.copy()
 im1[im1 < 0.5] = 0
 print(f"{'Image Shape':<20}:{im.shape}")
