@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 import time
 
-img_dir = "../images/innsbruck.png"
+img_dir = "../images/1.png"  # lokasi citra disesuaikan dengan yang dimiliki
 img = cv2.imread(img_dir)
 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 new_image = np.zeros(img.shape, img.dtype)
@@ -13,6 +13,7 @@ new_image_2 = np.zeros(img.shape, img.dtype)
 try:
     alpha = float(input("Enter a value for alpha (contrast): "))
     beta = int(input("Enter a value for beta (brightness): "))
+    factor = float(input("Enter Pillow brightness factor: "))
 except ValueError:
     print("Error, not a number")
 
@@ -35,7 +36,7 @@ print(f"Processing time (opencv function): {end-start:.5f} s")
 pil_img = Image.open(img_dir)
 start = time.time()
 enhancer = ImageEnhance.Brightness(pil_img)
-pil_output = enhancer.enhance(1.5)
+pil_output = enhancer.enhance(factor)
 end = time.time()
 print(f"Processing time (PIL): {end-start:.5f} s")
 
@@ -49,7 +50,7 @@ axs[0, 1].set_axis_off()
 axs[1, 0].set_title(f"Image Brightness OpenCV\nAlpha:{alpha} | Beta:{beta}")
 axs[1, 0].imshow(new_image_2)
 axs[1, 0].set_axis_off()
-axs[1, 1].set_title(f"Image Brightness Pillow")
+axs[1, 1].set_title(f"Image Brightness Pillow\nFactor: {factor}")
 axs[1, 1].imshow(pil_output, cmap="gray")
 axs[1, 1].set_axis_off()
 plt.show()
