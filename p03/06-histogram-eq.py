@@ -1,0 +1,28 @@
+import cv2
+import matplotlib.pyplot as plt
+
+img = cv2.imread("../images/gembala.png", 0)
+eq = cv2.equalizeHist(img)
+clahe = cv2.createCLAHE(clipLimit=20)
+cl1 = clahe.apply(img)
+
+fig, axs = plt.subplots(nrows=3, ncols=2)
+axs[0, 0].set_title("Original Image")
+axs[0, 0].set_axis_off()
+axs[0, 0].imshow(img, cmap="gray")
+axs[0, 1].set_title("Original Histogram")
+org_hist = cv2.calcHist([img], [0], None, [256], [0, 256])
+axs[0, 1].plot(org_hist)
+axs[1, 0].set_title(f"Result")
+axs[1, 0].set_axis_off()
+axs[1, 0].imshow(eq, cmap="gray")
+axs[1, 1].set_title("Equalized Histogram")
+eq_hist = cv2.calcHist([eq], [0], None, [256], [0, 256])
+axs[1, 1].plot(eq_hist)
+axs[2, 0].set_title(f"CLAHE Result")
+axs[2, 0].set_axis_off()
+axs[2, 0].imshow(cl1, cmap="gray")
+axs[2, 1].set_title("CLAHE")
+cl1_hist = cv2.calcHist([cl1], [0], None, [256], [0, 256])
+axs[2, 1].plot(cl1_hist)
+plt.show()
