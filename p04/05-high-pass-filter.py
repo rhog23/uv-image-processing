@@ -43,7 +43,7 @@ def parse_opt():
 
 def main(opt):
     try:
-        run(opt)
+        run(**vars(opt))
     except Exception as e:
         print(f"Error: {e}")
 
