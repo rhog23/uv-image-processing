@@ -14,9 +14,11 @@ def run(image="", tx=0, ty=0):
 
     plt.figure()
     plt.subplot(121)
+    plt.title("Original Image", fontsize=20)
     plt.imshow(img)
     plt.axis("off")
     plt.subplot(122)
+    plt.title(f"Translation Result\ntx={tx} | ty={ty}", fontsize=20)
     plt.imshow(result)
     plt.axis("off")
     plt.show()
