@@ -2,6 +2,7 @@ import cv2, sys
 import numpy as np
 import argparse
 
+src = None
 max_elem = 2
 max_kernel_size = 10
 title_trackbar_element_shape = "Element"
@@ -38,36 +39,26 @@ def main(image):
     cv2.waitKey()
 
 
-def morph_shape(val):
+def structuring_element(shape, size):
     shapes = [cv2.MORPH_RECT, cv2.MORPH_CROSS, cv2.MORPH_ELLIPSE]
 
-    return shapes[val]
+    return cv2.getStructuringElement(shapes[shape], (size, size))
 
 
 def erosion(val):
-    erosion_size = (
-        2 * cv2.getTrackbarPos(title_trackbar_kernel_size, title_erosion_window) + 1
+    element = structuring_element(
+        cv2.getTrackbarPos(title_trackbar_element_shape, title_erosion_window),
+        (2 * cv2.getTrackbarPos(title_trackbar_kernel_size, title_erosion_window) + 1),
     )
-    erosion_shape = morph_shape(
-        cv2.getTrackbarPos(title_trackbar_element_shape, title_erosion_window)
-    )
-
-    element = cv2.getStructuringElement(erosion_shape, (erosion_size, erosion_size))
 
     result = cv2.erode(src, element)
     cv2.imshow(title_erosion_window, result)
 
 
 def dilation(val):
-    dilation_size = cv2.getTrackbarPos(
-        title_trackbar_kernel_size, title_dilation_window
-    )
-    dilation_shape = morph_shape(
-        cv2.getTrackbarPos(title_trackbar_element_shape, title_dilation_window)
-    )
-
-    element = cv2.getStructuringElement(
-        dilation_shape, (2 * dilation_size + 1, 2 * dilation_size + 1)
+    element = structuring_element(
+        cv2.getTrackbarPos(title_trackbar_element_shape, title_dilation_window),
+        (2 * cv2.getTrackbarPos(title_trackbar_kernel_size, title_dilation_window) + 1),
     )
 
     result = cv2.dilate(src, element)
