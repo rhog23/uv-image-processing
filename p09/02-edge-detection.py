@@ -1,13 +1,13 @@
 import matplotlib.pyplot as plt
 from skimage import io, color, filters, feature
 
-image = io.imread("images/mildlee-8N6z4yXUkwY-unsplash.jpg")
+image = io.imread("images/jahe.jpg")
 image_gray = color.rgb2gray(image)
 edge_roberts = filters.roberts(image_gray)
 edge_sobel = filters.sobel(image_gray)
 edge_prewitt = filters.prewitt(image_gray)
 edge_scharr = filters.scharr(image_gray)
-edge_canny = feature.canny(image_gray, sigma=2)
+edge_canny = feature.canny(image_gray, sigma=5)
 
 fig, axs = plt.subplots(nrows=2, ncols=3, sharex=True, sharey=True, figsize=(10, 10))
 ax = axs.ravel()
