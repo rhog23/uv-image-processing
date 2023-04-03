@@ -1,45 +1,30 @@
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
+import numpy as np
+import cv2
 
-from skimage import data
+from skimage import io
 from skimage.filters import threshold_otsu
 from skimage.segmentation import clear_border
 from skimage.measure import label, regionprops
-from skimage.morphology import closing, square
+from skimage.morphology import closing, disk
 from skimage.color import label2rgb
 
-image = data.coins()
+image = io.imread("images/jahe.jpg", as_gray=True)
 
 # apply threshold
 thresh = threshold_otsu(image)
-bw = closing(image > thresh, square(3))
-
-# remove artifacts connected to image border
+bw = closing(image > thresh, disk(3))
+bw = np.bitwise_not(bw)
 cleared = clear_border(bw)
-
-# label image regions
 label_image = label(cleared)
-# to make the background transparent, pass the value of `bg_label`,
-# and leave `bg_color` as `None` and `kind` as `overlay`
 image_label_overlay = label2rgb(label_image, image=image, bg_label=0)
+for region in regionprops(label_image):
+    print("Area: ", region.area)
+    print("Perimeter: ", region.perimeter)
 
 fig, ax = plt.subplots(figsize=(10, 6))
-ax.imshow(image, cmap="gray")
+ax.imshow(image_label_overlay)
 
-for region in regionprops(label_image):
-    # take regions with large enough areas
-    if region.area >= 100:
-        # draw rectangle around segmented coins
-        minr, minc, maxr, maxc = region.bbox
-        rect = mpatches.Rectangle(
-            (minc, minr),
-            maxc - minc,
-            maxr - minr,
-            fill=False,
-            edgecolor="red",
-            linewidth=2,
-        )
-        ax.add_patch(rect)
 
 ax.set_axis_off()
 plt.tight_layout()
