@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from skimage import io, color, filters
 
-img = io.imread("images/jahe.jpg")
+img = io.imread("images/WIN_20230502_21_35_07_Pro.jpg")
 assert img is not None, "file could not be read, please check the path"
 gray = color.rgb2gray(img)
 gray = filters.gaussian(gray, sigma=3)

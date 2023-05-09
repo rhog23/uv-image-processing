@@ -1,8 +1,7 @@
 import time
 import cv2 as cv
 import sys
-import matplotlib.pyplot as plt
-from skimage import exposure, filters, morphology, segmentation, color, measure
+import numpy as np
 
 cap = cv.VideoCapture(0)
 cap.set(cv.CAP_PROP_FRAME_WIDTH, 160)
@@ -16,6 +15,9 @@ if not cap.isOpened():
 previous_frame_time = 0
 new_frame_time = 0
 
+low_black = np.array([0, 0, 121])
+high_black = np.array([255, 255, 255])
+
 while True:
     ret, frame = cap.read()
 
@@ -23,17 +25,9 @@ while True:
         print("[INFO] Can't receive frame (stream end?). Exiting ...")
         break
 
-    gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-    # gray_eq = exposure.equalize_adapthist(gray)
-    thresh = filters.threshold_otsu(gray)
-    bw = morphology.closing(gray > thresh, morphology.disk(2.6))
-    cleared = segmentation.clear_border(bw)
-    cleared = morphology.opening(cleared, morphology.disk(1.8))
-    label_image = measure.label(cleared)
-    for region in measure.regionprops(label_image):
-        if region.area >= 100:
-            minr, minc, maxr, maxc = region.bbox
-            rect = cv.rectangle(frame, (minc, minr), (maxc, maxr), (255, 0, 0), 1)
+    hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
+    mask = cv.inRange(hsv, low_black, high_black)
+    frame = cv.bitwise_and(frame, frame, mask=mask)
 
     new_frame_time = time.time()
     fps = 1 / (new_frame_time - previous_frame_time)
