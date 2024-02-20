@@ -1,7 +1,7 @@
 import cv2
 import time
 import numpy as np
-from skimage import measure, exposure
+from skimage import measure, filters, color, morphology, util
 
 video_capture = cv2.VideoCapture(0)
 # video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
@@ -12,16 +12,15 @@ new_frame_time = 0
 
 def detect_black_box(image):
     image = cv2.convertScaleAbs(image, alpha=2.5, beta=0)
-    text=""
     image_grayscale = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
-    image_grayscale = clahe.apply(image_grayscale)
-    image_blurred = cv2.GaussianBlur(image_grayscale, (7, 7), 0)
-    (_, threshInv) = cv2.threshold(image_blurred, 50, 255, cv2.THRESH_BINARY_INV)
-    label_image = measure.label(threshInv)
+    # image_blurred = filters.gaussian(image_grayscale, sigma=2)
+    thresh = filters.threshold_otsu(util.img_as_float(image_grayscale))
+    mask = image_grayscale > thresh
+    label_image = measure.label(mask)
     for region in measure.regionprops(label_image):
-        if region.area >= 10000 and region.area <= 90000:
-            if region.area >= 10000 and region.area <= 51000:
+
+        if region.area >= 26800 and region.area <= 90000:
+            if region.area >= 26800 and region.area <= 51000:
                 text = "small"
             elif region.area <= 60000:
                 text = "medium"
@@ -41,8 +40,7 @@ def detect_black_box(image):
                 cv2.LINE_AA,
             )
 
-    # return image
-    return np.expand_dims(threshInv, axis=-1)
+    return np.expand_dims(thresh, axis=-1)
 
 
 while True:
@@ -52,10 +50,10 @@ while True:
     center_y = height // 2
 
     # calculating the roi-box coordinates
-    top_left_x = center_x - 150
-    top_left_y = center_y - 150
-    bottom_right_x = top_left_x + 300
-    bottom_right_y = top_left_y + 300
+    top_left_x = center_x - 240
+    top_left_y = center_y - 75
+    bottom_right_x = top_left_x + 480
+    bottom_right_y = top_left_y + 150
 
     # suppress coordinates to stay within the image_frame bounds
     top_left_x = max(0, top_left_x)
