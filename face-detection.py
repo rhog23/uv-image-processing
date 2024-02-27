@@ -1,11 +1,12 @@
 import cv2, time
 from centerface import CenterFace
 
+centerface = CenterFace(landmarks=True)
+
 # Face Detection
 def detect_faces(img):
     img = cv2.convertScaleAbs(img, alpha=2.5, beta=0)
     tinggi, lebar = img.shape[:2]
-    centerface = CenterFace(landmarks=True)
   
     dets, lms = centerface(img, tinggi, lebar, threshold=0.35)
 
