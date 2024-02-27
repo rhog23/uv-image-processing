@@ -23,8 +23,8 @@ def detect_faces(img):
 
 
 cap = cv2.VideoCapture(0)
-cap.set(3, 160)
-cap.set(4, 120)
+cap.set(3, 320)
+cap.set(4, 240)
 
 prev_frame_time = 0
 new_frame_time = 0
