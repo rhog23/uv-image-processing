@@ -17,6 +17,7 @@ def detect_faces(img):
         x = int(bbox[0])
         w = int(bbox[2])
         cv2.rectangle(img, (x, y), (w, h), (255, 255, 255), 2)
+        # return img[y:h, x:w] # cropping the detected face
 
     return img
 
@@ -40,7 +41,9 @@ def calculate_roi(width, height, roi_width, roi_height):
 
 
 def get_contour(image):
-    # // On Progress
+    """
+    On Progress
+    """
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     sobelx = cv2.Sobel(
         gray_image, cv2.CV_64F, 1, 0, ksize=3
@@ -93,7 +96,8 @@ while True:
 
     rect_img = frame[top_left_y:bottom_right_y, top_left_x:bottom_right_x]
 
-    frame[top_left_y:bottom_right_y, top_left_x:bottom_right_x] = detect_faces(rect_img)
+    # frame[top_left_y:bottom_right_y, top_left_x:bottom_right_x] = detect_faces(rect_img)
+    result = detect_faces(rect_img)
 
     new_frame_time = time.time()
     fps = f"[FPS]: {str(int(1 / (new_frame_time - prev_frame_time)))}"
@@ -110,7 +114,7 @@ while True:
         cv2.LINE_AA,
     )
 
-    cv2.imshow("face detection demo", frame)
+    cv2.imshow("face detection demo", result)
     if cv2.waitKey(1) == ord("q"):
         break
 
