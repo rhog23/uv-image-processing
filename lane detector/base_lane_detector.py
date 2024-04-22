@@ -37,7 +37,7 @@ class VideoProcessor:
             ),
         )
 
-        combined = cv2.bitwise_and(thresh, opening)
+        combined = cv2.bitwise_and(thresh, edges)
 
         contours, _ = cv2.findContours(
             combined, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
@@ -46,7 +46,7 @@ class VideoProcessor:
         frame_copy = frame.copy()
         cv2.drawContours(frame_copy, contours, -1, (0, 255, 0), 2)
 
-        return frame_copy
+        return combined
 
     def process(self):
         while self.cap.isOpened():

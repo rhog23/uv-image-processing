@@ -1,13 +1,34 @@
-import cv2
+import cv2, typing
 import numpy as np
+import utils
 
 
-def preprocessFrame(frame: cv2.typing.MatLike) -> cv2.typing.MatLike:
+def filterColor(
+    frame: cv2.typing.MatLike,
+    color_code: typing.AnyStr,
+    lower: typing.List[typing.Union[int, int, int]],
+    upper: typing.List[typing.Union[int, int, int]],
+) -> cv2.typing.MatLike:
 
-    hls = cv2.cvtColor(frame, cv2.COLOR_BGR2HLS)
-    lower_white = np.array([0, 0, 210])
-    upper_white = np.array([255, 255, 255])
-    mask = cv2.inRange(hls, lower_white, upper_white)
-    hls_result = cv2.bitwise_and(frame, frame, mask=mask)
+    converted_frame = cv2.cvtColor(frame, utils.COLOR_CHANNELS_CONVERSION[color_code])
+    lower_bound = np.array(lower)
+    upper_bound = np.array(upper)
+    mask = cv2.inRange(converted_frame, lower_bound, upper_bound)
+    result = cv2.bitwise_and(frame, frame, mask=mask)
 
-    return hls_result
+    return result
+
+
+def applyBlurring(
+    frame: cv2.typing.MatLike, kernel_size: typing.Tuple[int, ...]
+) -> cv2.typing.MatLike:
+    try:
+        result = cv2.GaussianBlur(frame, kernel_size, 0)
+    except cv2.error:
+        result = frame
+    return result
+
+
+def edgeDet(frame: cv2.typing.MatLike) -> cv2.typing.MatLike:
+    result = cv2.Canny(frame, 100, 150)
+    return result
