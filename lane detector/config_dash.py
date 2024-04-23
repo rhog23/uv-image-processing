@@ -1,7 +1,7 @@
 import cv2, utils, vision
 import numpy as np
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 gray_win_name = "Gray Config"
 

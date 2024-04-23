@@ -2,11 +2,11 @@ import cv2
 from ultralytics import YOLO
 
 # Load the YOLOv8 model
-model = YOLO("toy-train-det-01_float16.tflite", task="detect")
+model = YOLO("toy-train-det-01.pt", task="detect")
 
 # Open the video file
 video_path = "VID-20240402-WA0001.mp4"
-cap = cv2.VideoCapture(video_path)
+cap = cv2.VideoCapture(0)
 
 # Loop through the video frames
 while cap.isOpened():
@@ -15,7 +15,7 @@ while cap.isOpened():
 
     if success:
         # Run YOLOv8 inference on the frame
-        results = model(frame, half=True)
+        results = model(frame)
 
         # Visualize the results on the frame
         annotated_frame = results[0].plot()
