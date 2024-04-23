@@ -1,0 +1,14 @@
+description: Ultralytics pingpong-det-small model trained on ./data.yaml
+author: Ultralytics
+date: '2024-04-22T07:39:16.384515'
+version: 8.2.2
+license: AGPL-3.0 License (https://ultralytics.com/license)
+docs: https://docs.ultralytics.com
+stride: 32
+task: detect
+batch: 1
+imgsz:
+- 160
+- 160
+names:
+  0: ball
