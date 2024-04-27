@@ -6,7 +6,7 @@ model = YOLO("toy-train-det-01.pt", task="detect")
 
 # Open the video file
 video_path = "VID-20240402-WA0001.mp4"
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 # Loop through the video frames
 while cap.isOpened():

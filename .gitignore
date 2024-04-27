@@ -3,3 +3,5 @@ env/
 *.mp4
 # *.tflite
 *.onnx
+toy-train-det.zip
+black-box-detector.zip
