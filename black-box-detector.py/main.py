@@ -5,13 +5,14 @@ from skimage import measure
 video_capture = cv2.VideoCapture(0)
 prev_frame_time = 0
 new_frame_time = 0
+clahe = cv2.createCLAHE(2)
 
 
 def detect_black_box(image):
-    image = cv2.convertScaleAbs(image, alpha=2.5, beta=0)
     text = ""
     image_grayscale = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    image_grayscale = cv2.equalizeHist(image_grayscale)
+    # image_grayscale = cv2.equalizeHist(image_grayscale)
+    image_grayscale = clahe.apply(image_grayscale)
 
     # Blurring the frame
     blurred_f = utils.applyBlurring(image_grayscale, (7, 7))
@@ -39,8 +40,8 @@ def detect_black_box(image):
                 1,
                 cv2.LINE_AA,
             )
-
     return image
+    # return cv2.cvtColor(image_grayscale, cv2.COLOR_GRAY2BGR)
     # return np.expand_dims(threshInv, axis=-1)
 
 
@@ -61,8 +62,6 @@ while True:
     top_left_y = max(0, top_left_y)
     bottom_right_x = min(width, bottom_right_x)
     bottom_right_y = min(height, bottom_right_y)
-
-    image_frame = cv2.convertScaleAbs(image_frame, alpha=0.25, beta=0)
 
     cv2.rectangle(
         image_frame,
@@ -92,7 +91,7 @@ while True:
         cv2.LINE_AA,
     )
 
-    cv2.imshow("black box size sorter", image_frame)
+    cv2.imshow("black box size sorter", rect_img)
 
     if cv2.waitKey(1) == ord("q"):
         print("[INFO] Closing...")
