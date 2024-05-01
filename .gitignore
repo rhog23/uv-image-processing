@@ -6,3 +6,6 @@ env/
 black-box-detector.zip
 toy-train-det.zip
 ping-pong-detector/models/waste-detector_openvino_model.zip
+
+toy-train-det.zip
+black-box-detector.zip
