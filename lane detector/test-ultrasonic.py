@@ -93,7 +93,7 @@ def turn_left() -> None:
     board.digital_pin_write(left_motor_BW, 0)
     board.digital_pin_write(right_motor_FW, 0)
 
-    time.sleep(0.25)
+    time.sleep(0.3)
     stop_motor()
 
 
@@ -105,7 +105,7 @@ def turn_right() -> None:
     board.digital_pin_write(left_motor_FW, 0)
     board.digital_pin_write(right_motor_BW, 0)
 
-    time.sleep(0.25)
+    time.sleep(0.3)
     stop_motor()
 
 
@@ -115,21 +115,21 @@ while True:
     try:
         right_distance = 0
         left_distance = 0
-        time.sleep(0.25)
+        time.sleep(0.3)
         board.sonar_read(trigger_pin)
 
-        if distance <= 15:
+        if distance <= 45:
             stop_motor()
             time.sleep(0.1)
             move_backward()
-            time.sleep(0.25)
+            time.sleep(0.3)
             stop_motor()
-            time.sleep(0.25)
+            time.sleep(0.3)
 
             right_distance = look_right()
-            time.sleep(0.2)
+            time.sleep(0.3)
             left_distance = look_left()
-            time.sleep(0.2)
+            time.sleep(0.3)
 
             if right_distance > left_distance:
                 turn_right()
