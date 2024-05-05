@@ -20,6 +20,7 @@ board = pymata4.Pymata4()
 
 
 def ultrasonic_callback(data):
+    time.sleep(0.07)
     global distance
     distance = data[2]
     return distance
@@ -43,9 +44,10 @@ def setup() -> None:
 
 def look_right():
     board.servo_write(servo_pin, 50)
-    time.sleep(0.3)
+    time.sleep(0.5)
     right_distance = board.sonar_read(trigger_pin)
     print(f"[info] look right | distance: {right_distance}")
+    time.sleep(0.1)
     board.servo_write(servo_pin, 115)
 
     return right_distance
@@ -53,9 +55,10 @@ def look_right():
 
 def look_left():
     board.servo_write(servo_pin, 170)
-    time.sleep(0.3)
+    time.sleep(0.5)
     left_distance = board.sonar_read(trigger_pin)
     print(f"[info] look left | distance: {left_distance}")
+    time.sleep(0.1)
     board.servo_write(servo_pin, 115)
 
     return left_distance
@@ -93,7 +96,7 @@ def turn_left() -> None:
     board.digital_pin_write(left_motor_BW, 0)
     board.digital_pin_write(right_motor_FW, 0)
 
-    time.sleep(0.3)
+    time.sleep(0.5)
     stop_motor()
 
 
@@ -105,7 +108,7 @@ def turn_right() -> None:
     board.digital_pin_write(left_motor_FW, 0)
     board.digital_pin_write(right_motor_BW, 0)
 
-    time.sleep(0.3)
+    time.sleep(0.5)
     stop_motor()
 
 
@@ -115,27 +118,29 @@ while True:
     try:
         right_distance = 0
         left_distance = 0
-        time.sleep(0.3)
+        time.sleep(0.1)
         board.sonar_read(trigger_pin)
 
         if distance <= 45:
             stop_motor()
             time.sleep(0.1)
             move_backward()
-            time.sleep(0.3)
+            time.sleep(0.5)
             stop_motor()
-            time.sleep(0.3)
+            time.sleep(0.5)
 
             right_distance = look_right()
-            time.sleep(0.3)
+            time.sleep(0.5)
             left_distance = look_left()
-            time.sleep(0.3)
+            time.sleep(0.5)
 
             if right_distance > left_distance:
                 turn_right()
+                stop_motor()
 
             elif right_distance < left_distance:
                 turn_left()
+                stop_motor()
 
             else:
                 move_forward()
