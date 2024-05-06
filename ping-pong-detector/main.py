@@ -98,8 +98,6 @@ if __name__ == "__main__":
 
                 cv2.imshow("detection result", frame)
 
-            picar.stop_motor(board, motor)
-
         if cv2.waitKey(1) == ord("q"):
             break
 
