@@ -1,3 +1,4 @@
+from sre_compile import dis
 import time, sys
 from pymata4 import pymata4
 
@@ -7,7 +8,7 @@ echo_pin = 9  #  digital input 9
 
 # Servo's Pin
 servo_pin = 10
-distance = 30  # initial distance is set to 30 cm
+distance = 100  # initial distance is set to 30 cm
 
 # Wheel's Pin
 left_motor_FW = 7
@@ -19,17 +20,11 @@ right_motor_BW = 4
 board = pymata4.Pymata4()
 
 
-def ultrasonic_callback(data):
-    time.sleep(0.07)
-    global distance
-    distance = data[2]
-    return distance
-
-
 def setup() -> None:
+    global distance
     print("[info] sets up sensors and motors")
     # sets up ultrasonic
-    board.set_pin_mode_sonar(trigger_pin, echo_pin, ultrasonic_callback)
+    board.set_pin_mode_sonar(trigger_pin, echo_pin)
 
     # sets up servo
     board.set_pin_mode_servo(servo_pin)
@@ -41,11 +36,21 @@ def setup() -> None:
     board.set_pin_mode_digital_output(right_motor_FW)
     board.set_pin_mode_digital_output(right_motor_BW)
 
+    time.sleep(2)
+    distance = get_distance()
+
+
+def get_distance():
+    time.sleep(0.07)
+    distance, _ = board.sonar_read(trigger_pin)
+
+    return distance
+
 
 def look_right():
     board.servo_write(servo_pin, 50)
     time.sleep(0.5)
-    right_distance = board.sonar_read(trigger_pin)
+    right_distance = get_distance()
     print(f"[info] look right | distance: {right_distance}")
     time.sleep(0.1)
     board.servo_write(servo_pin, 115)
@@ -56,7 +61,7 @@ def look_right():
 def look_left():
     board.servo_write(servo_pin, 170)
     time.sleep(0.5)
-    left_distance = board.sonar_read(trigger_pin)
+    left_distance = get_distance()
     print(f"[info] look left | distance: {left_distance}")
     time.sleep(0.1)
     board.servo_write(servo_pin, 115)
@@ -82,10 +87,10 @@ def stop_motor() -> None:
 
 def move_backward() -> None:
     print("[info] moving backward")
-    board.digital_pin_write(left_motor_FW, 1)
-    board.digital_pin_write(right_motor_FW, 1)
-    board.digital_pin_write(left_motor_BW, 0)
-    board.digital_pin_write(right_motor_BW, 0)
+    board.digital_pin_write(left_motor_FW, 0)
+    board.digital_pin_write(right_motor_FW, 0)
+    board.digital_pin_write(left_motor_BW, 1)
+    board.digital_pin_write(right_motor_BW, 1)
 
 
 def turn_left() -> None:
@@ -119,7 +124,8 @@ while True:
         right_distance = 0
         left_distance = 0
         time.sleep(0.1)
-        board.sonar_read(trigger_pin)
+
+        distance = get_distance()
 
         if distance <= 45:
             stop_motor()
