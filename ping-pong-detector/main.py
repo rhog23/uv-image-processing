@@ -70,7 +70,7 @@ if __name__ == "__main__":
         else:
             picar.move_forward(board, motor)
 
-        if results:
+        if len(results) > 0:
             for result in results:
                 for box in result.boxes:
                     coords = box.xyxy
