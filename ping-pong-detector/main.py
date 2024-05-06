@@ -93,10 +93,17 @@ if __name__ == "__main__":
                             1,
                             cv2.LINE_AA,
                         )
+
+                        print("Area: ", (w - x) * (h - y))
+
+                        if (w - x) * (h - y) > 10000:
+                            picar.stop_motor(board, motor)
+                            print("Found pingpong ball!")
+                            sys.exit()
                     else:
                         continue
 
-        cv2.imshow("detection result", frame)
+        cv2.imshow("result", frame)
 
         if cv2.waitKey(1) == ord("q"):
             break
