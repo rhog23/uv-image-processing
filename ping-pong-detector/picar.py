@@ -83,7 +83,7 @@ def turn_left(board, motor) -> None:
     board.digital_pin_write(left_motor_BW, 0)
     board.digital_pin_write(right_motor_FW, 0)
 
-    time.sleep(0.5)
+    time.sleep(0.2)
     stop_motor(board, motor)
 
 
@@ -96,5 +96,5 @@ def turn_right(board, motor) -> None:
     board.digital_pin_write(left_motor_FW, 0)
     board.digital_pin_write(right_motor_BW, 0)
 
-    time.sleep(0.5)
+    time.sleep(0.2)
     stop_motor(board, motor)
