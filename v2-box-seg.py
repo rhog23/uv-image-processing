@@ -11,8 +11,7 @@ new_frame_time = 0
 
 
 def detect_black_box(image):
-    image = cv2.convertScaleAbs(image, alpha=2.5, beta=0)
-    text=""
+    text = ""
     image_grayscale = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
     image_grayscale = clahe.apply(image_grayscale)
@@ -41,8 +40,8 @@ def detect_black_box(image):
                 cv2.LINE_AA,
             )
 
-    # return image
-    return np.expand_dims(threshInv, axis=-1)
+    return image
+    # return np.expand_dims(threshInv, axis=-1)
 
 
 while True:
@@ -63,16 +62,18 @@ while True:
     bottom_right_x = min(width, bottom_right_x)
     bottom_right_y = min(height, bottom_right_y)
 
-    image_frame = cv2.convertScaleAbs(image_frame, alpha=0.25, beta=0)
+    cv2.rectangle(
+        image_frame,
+        (top_left_x, top_left_y),
+        (bottom_right_x, bottom_right_y),
+        (70, 57, 230),
+        2,
+    )
+    rect_img = image_frame[top_left_y:bottom_right_y, top_left_x:bottom_right_x]
 
-    cv2.rectangle(image_frame, (top_left_x, top_left_y), (bottom_right_x, bottom_right_y), (70, 57, 230), 2)
-    rect_img = image_frame[
-        top_left_y : bottom_right_y, top_left_x : bottom_right_x
-    ]
-
-    image_frame[
-        top_left_y : bottom_right_y, top_left_x : bottom_right_x
-    ] = detect_black_box(rect_img)
+    image_frame[top_left_y:bottom_right_y, top_left_x:bottom_right_x] = (
+        detect_black_box(rect_img)
+    )
 
     new_frame_time = time.time()
     fps = f"[FPS]: {str(int(1 / (new_frame_time - prev_frame_time)))}"

@@ -4,7 +4,7 @@ import cv2
 
 box_annotator = sv.BoundingBoxAnnotator()
 label_annotator = sv.LabelAnnotator()
-model = YOLO("litter-det-yolov8s.pt", task="detect")
+model = YOLO("ping-pong-detector/models/waste-detector_openvino_model", task="detect")
 
 cap = cv2.VideoCapture(0)
 
@@ -12,7 +12,7 @@ while True:
     success, frame = cap.read()
 
     if success:
-        results = model(frame, imgsz=192)[0]
+        results = model(frame)[0]
 
         detections = sv.Detections.from_ultralytics(results)
 

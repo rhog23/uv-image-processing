@@ -3,5 +3,13 @@ env/
 *.mp4
 # *.tflite
 *.onnx
+black-box-detector.zip
+toy-train-det.zip
+ping-pong-detector/models/waste-detector_openvino_model.zip
+
 toy-train-det.zip
 black-box-detector.zip
+
+black-box-detector.zip
+toy-train-det.zip
+black-box-detector.py/__pycache__/utils.cpython-311.pyc
