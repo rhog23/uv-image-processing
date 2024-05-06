@@ -4,14 +4,17 @@ from ultralytics import YOLO
 
 
 if __name__ == "__main__":
-    model = YOLO("models/waste-detector_openvino_model", task="detect")
+    model = YOLO(
+        "ping-pong-detector/models/pingpong-tflite/pingpong-det-small_int8.tflite",
+        task="detect",
+    )
 
     cap = cv2.VideoCapture(0)
 
     while True:
         _, frame = cap.read()
 
-        results = model(frame, conf=0.5)
+        results = model(frame, imgsz=160, max_det=1, conf=0.5)
 
         for result in results:
             for box in result.boxes:
