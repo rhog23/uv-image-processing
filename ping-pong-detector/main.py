@@ -103,8 +103,6 @@ if __name__ == "__main__":
                     else:
                         continue
 
-        cv2.imshow("result", frame)
-
         if cv2.waitKey(1) == ord("q"):
             break
 
