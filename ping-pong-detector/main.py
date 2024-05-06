@@ -96,7 +96,7 @@ if __name__ == "__main__":
                     else:
                         continue
 
-                cv2.imshow("detection result", frame)
+        cv2.imshow("detection result", frame)
 
         if cv2.waitKey(1) == ord("q"):
             break
