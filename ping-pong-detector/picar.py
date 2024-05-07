@@ -1,11 +1,16 @@
 import time
 
 
-def setup(board, trigger_pin, echo_pin, servo_pin, motor) -> None:
+def setup(board, trigger_pin, echo_pin, servo_pin, motor, ena, motor_speed) -> None:
     print("[info] sets up sensors and motors")
     left_motor_FW, left_motor_BW, right_motor_FW, right_motor_BW = motor
     # sets up ultrasonic
     board.set_pin_mode_sonar(trigger_pin, echo_pin)
+
+    # sets ena and enb
+    for e in ena:
+        board.set_pin_mode_pwm_output(e)
+        board.pwm_write(e, motor_speed)
 
     # sets up servo
     board.set_pin_mode_servo(servo_pin)
