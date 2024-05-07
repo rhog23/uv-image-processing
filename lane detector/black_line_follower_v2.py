@@ -1,36 +1,28 @@
-import cv2
+import cv2, rpicar
 import numpy as np
-
-# import RPi.GPIO as GPIO
+from pymata4 import pymata4
 
 cap = cv2.VideoCapture(0)
 cap.set(3, 160)
 cap.set(4, 120)
 
-left_motor_FW = 7
-left_motor_BW = 6
-right_motor_FW = 5
-right_motor_BW = 4
+left_motor_FW = 9
+left_motor_BW = 8
+right_motor_FW = 7
+right_motor_BW = 6
+
+enA_pin = 5
+enB_pin = 10
+motor_speed = 75
+
+ena_pin = [enA_pin, enB_pin]
 
 board = pymata4.Pymata4()
 
-# en1 = 23
-# en2 = 24
-# GPIO.setmode(GPIO.BCM)
-# GPIO.setup(en1, GPIO.OUT)
-# GPIO.setup(en2, GPIO.OUT)
-# GPIO.setup(in1, GPIO.OUT)
-# GPIO.setup(in2, GPIO.OUT)
-# GPIO.setup(in3, GPIO.OUT)
-# GPIO.setup(in4, GPIO.OUT)
-# p1 = GPIO.PWM(en1, 100)
-# p2 = GPIO.PWM(en2, 100)
-# p1.start(50)
-# p2.start(50)
-# GPIO.output(in1, GPIO.LOW)
-# GPIO.output(in2, GPIO.LOW)
-# GPIO.output(in3, GPIO.LOW)
-# GPIO.output(in4, GPIO.LOW)
+motor = [left_motor_FW, left_motor_BW, right_motor_FW, right_motor_BW]
+
+rpicar.setup(board, motor, ena_pin, motor_speed)
+
 while True:
     ret, frame = cap.read()
     gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -47,38 +39,27 @@ while True:
             print("CX : " + str(cx) + "  CY : " + str(cy))
             if cx >= 120:
                 print("Turn Left")
-                # GPIO.output(in1, GPIO.HIGH)
-                # GPIO.output(in2, GPIO.LOW)
-                # GPIO.output(in3, GPIO.LOW)
-                # GPIO.output(in4, GPIO.HIGH)
+                rpicar.turn_left(board, motor)
+
             if cx < 120 and cx > 40:
                 print("On Track!")
-                # GPIO.output(in1, GPIO.HIGH)
-                # GPIO.output(in2, GPIO.LOW)
-                # GPIO.output(in3, GPIO.HIGH)
-                # GPIO.output(in4, GPIO.LOW)
+                rpicar.move_forward(board, motor)
+
             if cx <= 40:
                 print("Turn Right")
-                # GPIO.output(in1, GPIO.LOW)
-                # GPIO.output(in2, GPIO.HIGH)
-                # GPIO.output(in3, GPIO.HIGH)
-                # GPIO.output(in4, GPIO.LOW)
+                rpicar.turn_right(board, motor)
+
             cv2.circle(frame, (cx, cy), 5, (255, 255, 255), -1)
             cv2.drawContours(frame, c, -1, (0, 255, 0), 1)
     else:
         print("I don't see the line")
-        # GPIO.output(in1, GPIO.LOW)
-        # GPIO.output(in2, GPIO.LOW)
-        # GPIO.output(in3, GPIO.LOW)
-        # GPIO.output(in4, GPIO.LOW)
+        rpicar.stop_motor(board, motor)
 
     cv2.imshow("Mask", mask)
     cv2.imshow("Frame", frame)
     if cv2.waitKey(1) & 0xFF == ord("q"):  # 1 is the time in ms
-        # GPIO.output(in1, GPIO.LOW)
-        # GPIO.output(in2, GPIO.LOW)
-        # GPIO.output(in3, GPIO.LOW)
-        # GPIO.output(in4, GPIO.LOW)
+        rpicar.stop_motor(board, motor)
         break
+
 cap.release()
 cv2.destroyAllWindows()
