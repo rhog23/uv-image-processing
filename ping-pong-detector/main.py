@@ -9,6 +9,7 @@ trigger_pin = 8  #  digital input 8
 echo_pin = 9  #  digital input 9
 
 ena_pin = 11
+enb_pin = 11
 
 # Servo's Pin
 servo_pin = 10
@@ -20,6 +21,7 @@ left_motor_BW = 6
 right_motor_FW = 5
 right_motor_BW = 4
 
+ena = [ena_pin, enb_pin]
 motor = [left_motor_FW, left_motor_BW, right_motor_FW, right_motor_BW]
 
 board = pymata4.Pymata4()
@@ -27,7 +29,7 @@ board = pymata4.Pymata4()
 
 if __name__ == "__main__":
 
-    picar.setup(board, trigger_pin, echo_pin, servo_pin, motor, ena_pin)
+    picar.setup(board, trigger_pin, echo_pin, servo_pin, motor, ena)
 
     model = YOLO(
         "ping-pong-detector/models/pingpong-tflite/pingpong-det-small_int8.tflite",

@@ -8,8 +8,9 @@ def setup(board, trigger_pin, echo_pin, servo_pin, motor, ena) -> None:
     board.set_pin_mode_sonar(trigger_pin, echo_pin)
 
     # sets ena and enb
-    board.set_pin_mode_pwm_output(ena)
-    board.pwm_write(ena, 100)
+    for e in ena:
+        board.set_pin_mode_pwm_output(e)
+        board.pwm_write(e, 50)
 
     # sets up servo
     board.set_pin_mode_servo(servo_pin)
