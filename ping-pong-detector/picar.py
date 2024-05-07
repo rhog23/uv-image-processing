@@ -10,7 +10,7 @@ def setup(board, trigger_pin, echo_pin, servo_pin, motor, ena) -> None:
     # sets ena and enb
     for e in ena:
         board.set_pin_mode_pwm_output(e)
-        board.pwm_write(e, 50)
+        board.pwm_write(e, 100)
 
     # sets up servo
     board.set_pin_mode_servo(servo_pin)
