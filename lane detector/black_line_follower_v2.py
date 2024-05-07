@@ -1,48 +1,84 @@
 import cv2
 import numpy as np
 
-cap = cv2.VideoCapture(0)
-cap.set(3, 320)
-cap.set(4, 320)
+# import RPi.GPIO as GPIO
 
+cap = cv2.VideoCapture(0)
+cap.set(3, 160)
+cap.set(4, 120)
+
+left_motor_FW = 7
+left_motor_BW = 6
+right_motor_FW = 5
+right_motor_BW = 4
+
+board = pymata4.Pymata4()
+
+# en1 = 23
+# en2 = 24
+# GPIO.setmode(GPIO.BCM)
+# GPIO.setup(en1, GPIO.OUT)
+# GPIO.setup(en2, GPIO.OUT)
+# GPIO.setup(in1, GPIO.OUT)
+# GPIO.setup(in2, GPIO.OUT)
+# GPIO.setup(in3, GPIO.OUT)
+# GPIO.setup(in4, GPIO.OUT)
+# p1 = GPIO.PWM(en1, 100)
+# p2 = GPIO.PWM(en2, 100)
+# p1.start(50)
+# p2.start(50)
+# GPIO.output(in1, GPIO.LOW)
+# GPIO.output(in2, GPIO.LOW)
+# GPIO.output(in3, GPIO.LOW)
+# GPIO.output(in4, GPIO.LOW)
 while True:
     ret, frame = cap.read()
-    blackline = cv2.inRange(frame, (0, 0, 0), (60, 60, 60))
-    kernel = np.ones((3, 3), np.uint8)
-    blackline = cv2.erode(blackline, kernel, iterations=5)
-    blackline = cv2.dilate(blackline, kernel, iterations=9)
-    contours_blk, hierarchy_blk = cv2.findContours(
-        blackline.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
-    )
+    gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    blurred_frame = cv2.GaussianBlur(gray_frame, (7, 7), 0)
+    mask = cv2.inRange(blurred_frame, 0, 70)
 
-    if len(contours_blk) > 0:
-        blackbox = cv2.minAreaRect(contours_blk[0])
-        (x_min, y_min), (w_min, h_min), ang = blackbox
+    contours, hierarchy = cv2.findContours(mask, 1, cv2.CHAIN_APPROX_NONE)
+    if len(contours) > 0:
+        c = max(contours, key=cv2.contourArea)
+        M = cv2.moments(c)
+        if M["m00"] != 0:
+            cx = int(M["m10"] / M["m00"])
+            cy = int(M["m01"] / M["m00"])
+            print("CX : " + str(cx) + "  CY : " + str(cy))
+            if cx >= 120:
+                print("Turn Left")
+                # GPIO.output(in1, GPIO.HIGH)
+                # GPIO.output(in2, GPIO.LOW)
+                # GPIO.output(in3, GPIO.LOW)
+                # GPIO.output(in4, GPIO.HIGH)
+            if cx < 120 and cx > 40:
+                print("On Track!")
+                # GPIO.output(in1, GPIO.HIGH)
+                # GPIO.output(in2, GPIO.LOW)
+                # GPIO.output(in3, GPIO.HIGH)
+                # GPIO.output(in4, GPIO.LOW)
+            if cx <= 40:
+                print("Turn Right")
+                # GPIO.output(in1, GPIO.LOW)
+                # GPIO.output(in2, GPIO.HIGH)
+                # GPIO.output(in3, GPIO.HIGH)
+                # GPIO.output(in4, GPIO.LOW)
+            cv2.circle(frame, (cx, cy), 5, (255, 255, 255), -1)
+            cv2.drawContours(frame, c, -1, (0, 255, 0), 1)
+    else:
+        print("I don't see the line")
+        # GPIO.output(in1, GPIO.LOW)
+        # GPIO.output(in2, GPIO.LOW)
+        # GPIO.output(in3, GPIO.LOW)
+        # GPIO.output(in4, GPIO.LOW)
 
-        if ang < -45:
-            ang = 90 + ang
-        if w_min < h_min and ang > 0:
-            ang = (90 - ang) * -1
-        if w_min > h_min and ang < 0:
-            ang = 90 + ang
-        setpoint = 320
-        error = int(x_min - setpoint)
-        ang = int(ang)
-        box = cv2.boxPoints(blackbox)
-        box = np.int64(box)
-        cv2.drawContours(frame, [box], 0, (0, 0, 255), 3)
-        cv2.putText(
-            frame, str(ang), (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2
-        )
-        cv2.putText(
-            frame, str(error), (10, 320), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2
-        )
-        cv2.line(frame, (int(x_min), 200), (int(x_min), 250), (255, 0, 0), 3)
-
-    cv2.imshow("Blackline", blackline)
-    cv2.imshow("Original", frame)
-    if cv2.waitKey(1) & 0xFF == ord("q"):
+    cv2.imshow("Mask", mask)
+    cv2.imshow("Frame", frame)
+    if cv2.waitKey(1) & 0xFF == ord("q"):  # 1 is the time in ms
+        # GPIO.output(in1, GPIO.LOW)
+        # GPIO.output(in2, GPIO.LOW)
+        # GPIO.output(in3, GPIO.LOW)
+        # GPIO.output(in4, GPIO.LOW)
         break
-
 cap.release()
 cv2.destroyAllWindows()
