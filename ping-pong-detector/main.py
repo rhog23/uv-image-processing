@@ -1,8 +1,10 @@
 import cv2
-import time, sys
-import picar
+import time, sys, os
+import picar, pathlib
 from pymata4 import pymata4
 from ultralytics import YOLO
+
+model_path = "models/pingpong-tflite/pingpong-det-small_int8.tflite"
 
 # Ultrasonic Sensor's Pin
 trigger_pin = 8  #  digital input 8
@@ -10,6 +12,10 @@ echo_pin = 9  #  digital input 9
 
 ena_pin = 11
 enb_pin = 12
+
+motor_speed = (
+    75  #  changes the current to ena and enb pin resulting in changes of speed
+)
 
 # Servo's Pin
 servo_pin = 10
@@ -29,10 +35,10 @@ board = pymata4.Pymata4()
 
 if __name__ == "__main__":
 
-    picar.setup(board, trigger_pin, echo_pin, servo_pin, motor, ena)
+    picar.setup(board, trigger_pin, echo_pin, servo_pin, motor, ena, motor_speed)
 
     model = YOLO(
-        "ping-pong-detector/models/pingpong-tflite/pingpong-det-small_int8.tflite",
+        model_path,
         task="detect",
     )
 
@@ -48,7 +54,7 @@ if __name__ == "__main__":
 
         results = model(frame, imgsz=160, max_det=1, conf=0.5)
 
-        if distance <= 45:
+        if distance <= 55:
             picar.stop_motor(board, motor)
             time.sleep(0.1)
             picar.move_backward(board, motor)
