@@ -9,7 +9,7 @@ trigger_pin = 8  #  digital input 8
 echo_pin = 9  #  digital input 9
 
 ena_pin = 11
-enb_pin = 11
+enb_pin = 12
 
 # Servo's Pin
 servo_pin = 10
