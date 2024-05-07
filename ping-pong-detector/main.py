@@ -8,7 +8,7 @@ from ultralytics import YOLO
 trigger_pin = 8  #  digital input 8
 echo_pin = 9  #  digital input 9
 
-ena_pin = 12
+ena_pin = 11
 
 # Servo's Pin
 servo_pin = 10
