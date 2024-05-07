@@ -8,6 +8,8 @@ from ultralytics import YOLO
 trigger_pin = 8  #  digital input 8
 echo_pin = 9  #  digital input 9
 
+ena_pin = 12
+
 # Servo's Pin
 servo_pin = 10
 distance = 100  # initial distance is set to 30 cm
@@ -25,7 +27,7 @@ board = pymata4.Pymata4()
 
 if __name__ == "__main__":
 
-    picar.setup(board, trigger_pin, echo_pin, servo_pin, motor)
+    picar.setup(board, trigger_pin, echo_pin, servo_pin, motor, ena_pin)
 
     model = YOLO(
         "ping-pong-detector/models/pingpong-tflite/pingpong-det-small_int8.tflite",
