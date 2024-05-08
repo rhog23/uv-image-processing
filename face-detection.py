@@ -64,10 +64,10 @@ def get_contour(image):
     cv2.addWeighted(image, 0.7, edges_image, 0.3, 0)  # Overlay with transparency
 
 
-target_width = 480
-target_height = 480
-roi_width = 480
-roi_height = 480
+target_width = 320
+target_height = 240
+roi_width = 120
+roi_height = 120
 centerface = CenterFace(landmarks=True)
 top_left_x, top_left_y, bottom_right_x, bottom_right_y = calculate_roi(
     target_width, target_height, roi_width, roi_height
