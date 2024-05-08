@@ -74,8 +74,8 @@ top_left_x, top_left_y, bottom_right_x, bottom_right_y = calculate_roi(
 )
 
 cap = cv2.VideoCapture(0)
-# cap.set(cv2.CAP_PROP_FRAME_WIDTH, target_width)  # resizing the camera's width
-# cap.set(cv2.CAP_PROP_FRAME_HEIGHT, target_height)  # resizing the camera's height
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, target_width)  # resizing the camera's width
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, target_height)  # resizing the camera's height
 
 prev_frame_time = 0
 new_frame_time = 0
