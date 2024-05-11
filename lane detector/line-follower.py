@@ -16,15 +16,14 @@ board = pymata4.Pymata4()
 
 
 def setup() -> None:
-    global distance
-    print("[info] sets up sensors and motors")
+    print("[info] sets up motors")
 
     # sets up ena
     board.set_pin_mode_pwm_output(ena)
-    board.pwm_write(ena, 100)
+    board.pwm_write(ena, 90)
 
     board.set_pin_mode_pwm_output(enb)
-    board.pwm_write(enb, 100)
+    board.pwm_write(enb, 90)
 
     # sets up wheels
     board.set_pin_mode_digital_output(left_motor_FW)
