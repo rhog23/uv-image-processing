@@ -13,7 +13,7 @@ right_motor_BW = 8
 
 enA_pin = 5
 enB_pin = 10
-motor_speed = 75
+motor_speed = 90
 
 ena_pin = [enA_pin, enB_pin]
 
