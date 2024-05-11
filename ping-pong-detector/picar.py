@@ -6,11 +6,14 @@ def setup(board, trigger_pin, echo_pin, servo_pin, motor, ena, motor_speed) -> N
     left_motor_FW, left_motor_BW, right_motor_FW, right_motor_BW = motor
     # sets up ultrasonic
     board.set_pin_mode_sonar(trigger_pin, echo_pin)
+    board.set_pin_mode_pwm_output(ena[0])
+    board.pwm_write(ena[0], 255)
+
+    board.set_pin_mode_pwm_output(ena[1])
+    board.pwm_write(ena[1], 255)
 
     # sets ena and enb
-    for e in ena:
-        board.set_pin_mode_pwm_output(e)
-        board.pwm_write(e, motor_speed)
+    # sets up ena
 
     # sets up servo
     board.set_pin_mode_servo(servo_pin)

@@ -4,17 +4,17 @@ import picar, pathlib
 from pymata4 import pymata4
 from ultralytics import YOLO
 
-model_path = "models/pingpong-tflite/pingpong-det-small_int8.tflite"
+model_path = "ping-pong-detector/models/pingpong-tflite/pingpong-det-small_int8.tflite"
 
 # Ultrasonic Sensor's Pin
 trigger_pin = 8  #  digital input 8
 echo_pin = 9  #  digital input 9
 
-ena_pin = 11
+ena_pin = 2
 enb_pin = 12
 
 motor_speed = (
-    75  #  changes the current to ena and enb pin resulting in changes of speed
+    100  #  changes the current to ena and enb pin resulting in changes of speed
 )
 
 # Servo's Pin
@@ -115,6 +115,6 @@ if __name__ == "__main__":
 
         if cv2.waitKey(1) == ord("q"):
             break
-
+    picar.stop_motor(board, motor)
     cap.release()
     cv2.destroyAllWindows()
