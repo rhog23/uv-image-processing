@@ -1,6 +1,15 @@
 import cv2, time
 import numpy as np
+import tensorflow as tf
 from centerface import CenterFace
+from deepface import DeepFace
+from deepface.modules import verification
+from deepface.models.FacialRecognition import FacialRecognition
+
+# model: FacialRecognition = DeepFace.build_model(model_name="Dlib")
+# target_size = model.input_shape
+
+# print(f"target_size: {target_size}")
 
 
 # Face Detection
@@ -16,8 +25,15 @@ def detect_faces(img):
         h = int(bbox[3])
         x = int(bbox[0])
         w = int(bbox[2])
+        # img = (
+        #     tf.image.resize_with_pad(img[y:h, x:w], target_size[0], target_size[1])
+        #     .numpy()
+        #     .astype(np.uint8)
+        # )
+        # representation = model.forward(np.expand_dims(img, axis=0))
+        # print(len(representation))
         cv2.rectangle(img, (x, y), (w, h), (255, 255, 255), 2)
-        # return img[y:h, x:w] # cropping the detected face
+        # return img[y:h, x:w]  # cropping the detected face
 
     return img
 
@@ -66,8 +82,8 @@ def get_contour(image):
 
 target_width = 320
 target_height = 240
-roi_width = 120
-roi_height = 120
+roi_width = 160
+roi_height = 160
 centerface = CenterFace(landmarks=True)
 top_left_x, top_left_y, bottom_right_x, bottom_right_y = calculate_roi(
     target_width, target_height, roi_width, roi_height
