@@ -6,10 +6,10 @@ cap = cv2.VideoCapture(0)
 cap.set(3, 160)
 cap.set(4, 120)
 
-left_motor_FW = 9
-left_motor_BW = 8
-right_motor_FW = 7
-right_motor_BW = 6
+left_motor_FW = 6
+left_motor_BW = 7
+right_motor_FW = 9
+right_motor_BW = 8
 
 enA_pin = 5
 enB_pin = 10
