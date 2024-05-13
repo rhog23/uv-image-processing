@@ -23,10 +23,10 @@ def setup() -> None:
 
     # sets up ena
     board.set_pin_mode_pwm_output(ena)
-    board.pwm_write(ena, 70)
+    board.pwm_write(ena, 100)
 
     board.set_pin_mode_pwm_output(enb)
-    board.pwm_write(enb, 50)
+    board.pwm_write(enb, 100)
 
     # sets up wheels
     board.set_pin_mode_digital_output(left_motor_FW)
@@ -120,8 +120,8 @@ while True:
             print("I don't see the line")
             stop_motor()
 
-        cv2.imshow("Mask", mask)
-        cv2.imshow("Frame", frame)
+        # cv2.imshow("Mask", mask)
+        # cv2.imshow("Frame", frame)
         if cv2.waitKey(1) & 0xFF == ord("q"):  # 1 is the time in ms
             stop_motor()
             break
