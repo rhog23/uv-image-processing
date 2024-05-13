@@ -2,7 +2,7 @@ import cv2, rpicar, sys, time
 import numpy as np
 from pymata4 import pymata4
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(2)
 cap.set(3, 160)
 cap.set(4, 120)
 
@@ -120,8 +120,8 @@ while True:
             print("I don't see the line")
             stop_motor()
 
-        # cv2.imshow("Mask", mask)
-        # cv2.imshow("Frame", frame)
+        cv2.imshow("Mask", mask)
+        cv2.imshow("Frame", frame)
         if cv2.waitKey(1) & 0xFF == ord("q"):  # 1 is the time in ms
             stop_motor()
             break
@@ -131,4 +131,4 @@ while True:
         sys.exit(0)
 
 cap.release()
-# cv2.destroyAllWindows()
+cv2.destroyAllWindows()
