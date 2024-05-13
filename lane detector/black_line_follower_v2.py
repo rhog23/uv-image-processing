@@ -103,16 +103,16 @@ while True:
                 cy = int(M["m01"] / M["m00"])
                 print("CX : " + str(cx) + "  CY : " + str(cy))
                 if cx >= 120:
-                    print("Turn Left")
-                    turn_left()
+                    print("Turn Right")
+                    turn_right()
 
                 if cx < 120 and cx > 40:
                     print("On Track!")
                     move_forward()
 
                 if cx <= 40:
-                    print("Turn Right")
-                    turn_right()
+                    print("Turn Left")
+                    turn_left()
 
                 cv2.circle(frame, (cx, cy), 5, (255, 255, 255), -1)
                 cv2.drawContours(frame, c, -1, (0, 255, 0), 1)
