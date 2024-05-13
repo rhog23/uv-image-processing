@@ -23,10 +23,10 @@ def setup() -> None:
 
     # sets up ena
     board.set_pin_mode_pwm_output(ena)
-    board.pwm_write(ena, 100)
+    board.pwm_write(ena, 80)
 
     board.set_pin_mode_pwm_output(enb)
-    board.pwm_write(enb, 100)
+    board.pwm_write(enb, 80)
 
     # sets up wheels
     board.set_pin_mode_digital_output(left_motor_FW)
@@ -67,7 +67,7 @@ def turn_left() -> None:
     board.digital_pin_write(left_motor_BW, 0)
     board.digital_pin_write(right_motor_FW, 0)
 
-    time.sleep(0.5)
+    time.sleep(0.1)
     stop_motor()
 
 
@@ -79,7 +79,7 @@ def turn_right() -> None:
     board.digital_pin_write(left_motor_FW, 0)
     board.digital_pin_write(right_motor_BW, 0)
 
-    time.sleep(0.5)
+    time.sleep(0.1)
     stop_motor()
 
 
@@ -92,7 +92,7 @@ while True:
         ret, frame = cap.read()
         gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         blurred_frame = cv2.GaussianBlur(gray_frame, (7, 7), 0)
-        mask = cv2.inRange(blurred_frame, 0, 70)
+        mask = cv2.inRange(blurred_frame, 0, 120)
 
         contours, hierarchy = cv2.findContours(mask, 1, cv2.CHAIN_APPROX_NONE)
         if len(contours) > 0:
@@ -120,8 +120,9 @@ while True:
             print("I don't see the line")
             stop_motor()
 
-        # cv2.imshow("Mask", mask)
-        # cv2.imshow("Frame", frame)
+        cv2.imshow("Mask", mask)
+        cv2.imshow("Frame", frame)
+
         if cv2.waitKey(1) & 0xFF == ord("q"):  # 1 is the time in ms
             stop_motor()
             break
