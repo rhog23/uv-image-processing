@@ -1,39 +1,43 @@
 #!/usr/bin/env python3
 
+from distutils.command import clean
 import cv2
-import vision
 import numpy as np
 
-DIRECTION = 0
 
-if __name__ == "__main__":
-    cap = cv2.VideoCapture(0)
-    cap.set(3, 320)
+def preprocessing(frame):
+    height, width = frame.shape[:2]
 
-    while cap.isOpened():
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    blur = cv2.blur(gray, (7, 7))
+
+    mask = cv2.inRange(blur, 0, 120)
+    
+    kernel = 
+
+    return mask
+
+
+def cleanup(cap):
+    cap.release()
+    cv2.destroyAllWindows()
+
+
+cap = cv2.VideoCapture(0)
+cap.set(3, 160)
+cap.set(4, 120)
+
+while True:
+    try:
         ret, frame = cap.read()
-        if ret:
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-            gray = vision.applyBlurring(gray, tuple([9, 9]))
+        result = preprocessing(frame)
 
-            ret, th = cv2.threshold(gray, 0, 55, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+        cv2.imshow("frame", result)
 
-            edges = vision.edgeDet(th)
-            edges = cv2.morphologyEx(edges, cv2.MORPH_DILATE, np.ones((5, 5), np.uint8))
-
-            masked = cv2.bitwise_and(th, th, mask=edges)
-
-            contours, _ = cv2.findContours(
-                masked, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
-            )
-
-            marked_frame = frame.copy()
-            cv2.drawContours(marked_frame, contours, -1, (255, 255, 0), 2)
-            cv2.imshow("frame", marked_frame)
-            if cv2.waitKey(1) & 0xFF == ord("q"):
-                break
-        else:
+        if cv2.waitKey(1) == ord("q"):
+            cleanup(cap)
             break
-cap.release()
-cv2.destroyAllWindows()
+    except KeyboardInterrupt:
+        cleanup(cap)
+        exit()
