@@ -34,7 +34,7 @@ def readVideo(src: str | int = 0):
     if src != 0:
         cap = cv2.VideoCapture(os.path.join(CWD_PATH, src))
     else:
-        cap = cv2.VideoCapture(0)
+        cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
     return cap
 

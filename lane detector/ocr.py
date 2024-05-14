@@ -1,7 +1,9 @@
-import easyocr
+from number_recognition import NumberRecognizer
 
-reader = easyocr.Reader(["en"])
+n = NumberRecognizer()
 
-result = reader.readtext("lane detector/pyimagesearch_address-768x399.jpg")
+n.init()  # create a model
+n.load()  # load the model
 
-print(result)
+num = n.recognize("path/to/image_28x28.png")  # recognise the image
+print(f"the number is {num}")

@@ -1,7 +1,7 @@
 import cv2, utils, vision
 import numpy as np
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
 gray_win_name = "Gray Config"
 
@@ -18,7 +18,6 @@ cv2.createTrackbar("Gray Min", gray_win_name, 0, 255, _empty)
 cv2.createTrackbar("Gray Max", gray_win_name, 0, 255, _empty)
 cv2.createTrackbar("Blurring Kernel", gray_win_name, 1, 21, _empty)
 
-cap = cv2.VideoCapture(0)
 init_points = [102, 80, 20, 160]
 utils.init_trackball(init_points, gray_win_name)
 

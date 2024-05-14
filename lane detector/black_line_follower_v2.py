@@ -2,7 +2,7 @@ import cv2, rpicar, sys, time
 import numpy as np
 from pymata4 import pymata4
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 cap.set(3, 160)
 cap.set(4, 120)
 
@@ -87,8 +87,8 @@ setup()
 
 while True:
     try:
-        time.sleep(2)
-        move_forward()
+        # time.sleep(2)
+        # move_forward()
         ret, frame = cap.read()
         gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         blurred_frame = cv2.GaussianBlur(gray_frame, (7, 7), 0)
@@ -102,33 +102,35 @@ while True:
                 cx = int(M["m10"] / M["m00"])
                 cy = int(M["m01"] / M["m00"])
                 print("CX : " + str(cx) + "  CY : " + str(cy))
-                if cx >= 120:
+                if cx >= 100:
                     print("Turn Right")
-                    turn_right()
+                    # turn_right()
 
-                if cx < 120 and cx > 40:
+                if cx < 100 and cx > 65:
                     print("On Track!")
-                    move_forward()
+                    # move_forward()
 
-                if cx <= 40:
+                if cx <= 65:
                     print("Turn Left")
-                    turn_left()
+                    # turn_left()
 
                 cv2.circle(frame, (cx, cy), 5, (255, 255, 255), -1)
                 cv2.drawContours(frame, c, -1, (0, 255, 0), 1)
         else:
             print("I don't see the line")
-            stop_motor()
+            # stop_motor()
 
-        cv2.imshow("Mask", mask)
-        cv2.imshow("Frame", frame)
+        result = np.hstack([frame, cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)])
+        # cv2.imshow("Mask", mask)
+        # cv2.imshow("Frame", frame)
+        cv2.imshow("Frame", result)
 
         if cv2.waitKey(1) & 0xFF == ord("q"):  # 1 is the time in ms
-            stop_motor()
+            # stop_motor()
             break
     except KeyboardInterrupt:
-        stop_motor()
-        board.shutdown()
+        # stop_motor()
+        # board.shutdown()
         sys.exit(0)
 
 cap.release()
