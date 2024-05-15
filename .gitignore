@@ -1,8 +1,12 @@
 env/
 __pycache__/
 *.mp4
-# *.tflite
+*.tflite
 *.onnx
+*.pt
+*.torchscript
+
+
 black-box-detector.zip
 toy-train-det.zip
 ping-pong-detector/models/waste-detector_openvino_model.zip

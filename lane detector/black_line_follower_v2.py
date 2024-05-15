@@ -10,10 +10,10 @@ ena = 5
 enb = 10
 
 # Wheel's Pin
-left_motor_FW = 6
-left_motor_BW = 7
-right_motor_FW = 9
-right_motor_BW = 8
+left_motor_FW = 7
+left_motor_BW = 6
+right_motor_FW = 8
+right_motor_BW = 9
 
 board = pymata4.Pymata4()
 
@@ -23,10 +23,10 @@ def setup() -> None:
 
     # sets up ena
     board.set_pin_mode_pwm_output(ena)
-    board.pwm_write(ena, 80)
+    board.pwm_write(ena, 130)
 
     board.set_pin_mode_pwm_output(enb)
-    board.pwm_write(enb, 80)
+    board.pwm_write(enb, 130)
 
     # sets up wheels
     board.set_pin_mode_digital_output(left_motor_FW)
@@ -88,7 +88,7 @@ setup()
 while True:
     try:
         # time.sleep(2)
-        # move_forward()
+        move_forward()
         ret, frame = cap.read()
         gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         blurred_frame = cv2.GaussianBlur(gray_frame, (7, 7), 0)
@@ -101,24 +101,32 @@ while True:
             if M["m00"] != 0:
                 cx = int(M["m10"] / M["m00"])
                 cy = int(M["m01"] / M["m00"])
-                print("CX : " + str(cx) + "  CY : " + str(cy))
-                if cx >= 100:
+                cv2.putText(
+                    frame,
+                    f"CX : {str(cx)} , CY : {str(cy)}",
+                    (10, 10),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.5,
+                    (0, 0, 255),
+                    1,
+                )
+                if cx >= 120:
                     print("Turn Right")
-                    # turn_right()
+                    turn_left()
 
-                if cx < 100 and cx > 65:
+                if cx < 120 and cx > 40:
                     print("On Track!")
-                    # move_forward()
+                    move_forward()
 
-                if cx <= 65:
+                if cx <= 40:
                     print("Turn Left")
-                    # turn_left()
+                    turn_right()
 
                 cv2.circle(frame, (cx, cy), 5, (255, 255, 255), -1)
                 cv2.drawContours(frame, c, -1, (0, 255, 0), 1)
         else:
             print("I don't see the line")
-            # stop_motor()
+            stop_motor()
 
         result = np.hstack([frame, cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)])
         # cv2.imshow("Mask", mask)
@@ -126,11 +134,11 @@ while True:
         cv2.imshow("Frame", result)
 
         if cv2.waitKey(1) & 0xFF == ord("q"):  # 1 is the time in ms
-            # stop_motor()
+            stop_motor()
             break
     except KeyboardInterrupt:
-        # stop_motor()
-        # board.shutdown()
+        stop_motor()
+        board.shutdown()
         sys.exit(0)
 
 cap.release()
