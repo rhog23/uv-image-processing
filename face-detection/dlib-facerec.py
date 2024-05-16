@@ -117,7 +117,7 @@ def resize_crop(img, target_width=150, target_height=150, add_padding=False):
 
 if __name__ == "__main__":
 
-    target_height = 240
+    target_height: int = 240
     target_width = 320
 
     # load dlib's  face detector
