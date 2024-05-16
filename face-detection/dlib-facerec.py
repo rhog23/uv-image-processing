@@ -117,8 +117,8 @@ def resize_crop(img, target_width=150, target_height=150, add_padding=False):
 
 if __name__ == "__main__":
 
-    target_height: int = 240
-    target_width = 320
+    target_height: int = 640
+    target_width: int = 640
 
     # load dlib's  face detector
     detector = dlib.get_frontal_face_detector()
@@ -135,8 +135,10 @@ if __name__ == "__main__":
     face_detector = CenterFace()
 
     img_source = load_image(
-        "test-image-2.jpg", target_width, target_height, False
+        "IMG_20240420_004313.jpg", target_width, target_height, True
     )  # RGB Image. Preserved ratio when resizing the image
+
+    logging.info("IMAGE SHAPE", img_source.shape)
 
     centerface_result, centerface_crop = test_centerface(
         img_source.copy(), face_detector

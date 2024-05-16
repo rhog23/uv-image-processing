@@ -75,7 +75,7 @@ def get_contour(image):
 
 
 target_width = 320
-target_height = 240
+target_height = 180
 roi_width = 160
 roi_height = 160
 
