@@ -1,33 +1,54 @@
-import cv2, time
 import numpy as np
 import tensorflow as tf
+import cv2, time, dlib, joblib
 from centerface import CenterFace
-import dlib
 
 
 # Face Detection
 def detect_faces(img):
-    img = cv2.convertScaleAbs(img, alpha=2.5, beta=0)
     tinggi, lebar = img.shape[:2]
 
     dets, _ = centerface(img, tinggi, lebar, threshold=0.25)
 
-    for det in dets:
-        bbox = det[:4]
-        y = int(bbox[1])
-        h = int(bbox[3])
-        x = int(bbox[0])
-        w = int(bbox[2])
-        print(x, y, w, h)
-        # img = (
-        #     tf.image.resize_with_pad(img[y:h, x:w], target_size[0], target_size[1])
-        #     .numpy()
-        #     .astype(np.uint8)
-        # )
-        # representation = model.forward(np.expand_dims(img, axis=0))
-        # print(len(representation))
-        cv2.rectangle(img, (x, y), (w, h), (255, 255, 255), 2)
-        # return img[y:h, x:w]  # cropping the detected face
+    if len(dets) == 1:
+        for det in dets:
+            bbox = det[:4]
+            x_min = int(bbox[0])
+            y_min = int(bbox[1])
+            x_max = int(bbox[2])
+            y_max = int(bbox[3])
+
+            cropped_face = (
+                tf.image.crop_to_bounding_box(
+                    img,
+                    y_min,
+                    x_min,
+                    y_max - y_min,
+                    x_max - x_min,
+                )
+                .numpy()
+                .astype(np.uint8)
+            )
+
+            # resize the cropped face into 150 x 150 (as required by dlib's model);
+            # adds padding to prevent changing the structure of the face
+            resized_img = (
+                tf.image.resize_with_pad(cropped_face[..., ::-1], 150, 150)
+                .numpy()
+                .astype(np.uint8)
+            )
+
+            # generate 128d embeddings using dlib's model
+            face_desc = np.array(facerec.compute_face_descriptor(resized_img)).reshape(
+                1, -1
+            )
+            print(len(face_desc))
+
+            result = knn_model.predict(face_desc)
+            print(result)
+
+            cv2.rectangle(img, (x_min, y_min), (x_max, y_max), (255, 255, 255), 2)
+            # return img[y:h, x:w]  # cropping the detected face
 
     return img
 
@@ -50,34 +71,10 @@ def calculate_roi(width, height, roi_width, roi_height):
     return (top_left_x, top_left_y, bottom_right_x, bottom_right_y)
 
 
-def get_contour(image):
-    """
-    On Progress
-    """
-    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    sobelx = cv2.Sobel(
-        gray_image, cv2.CV_64F, 1, 0, ksize=3
-    )  # Sobel for horizontal edges
-    sobely = cv2.Sobel(
-        gray_image, cv2.CV_64F, 0, 1, ksize=3
-    )  # Sobel for vertical edges
-
-    sobel = np.absolute(sobelx) + np.absolute(sobely)
-    thresh = 0.3 * np.max(sobel)  # Adjust threshold as needed
-    binary_edges = np.where(sobel > thresh, 255, 0).astype(
-        np.uint8
-    )  # Convert to uint8 for display
-
-    edges_image = cv2.cvtColor(
-        binary_edges, cv2.COLOR_GRAY2BGR
-    )  # Convert binary edges back to BGR
-    cv2.addWeighted(image, 0.7, edges_image, 0.3, 0)  # Overlay with transparency
-
-
 target_width = 320
 target_height = 180
-roi_width = 160
-roi_height = 160
+roi_width = 100
+roi_height = 100
 
 # instantiate CenterFace
 centerface = CenterFace(landmarks=True)
@@ -87,11 +84,14 @@ facerec = dlib.face_recognition_model_v1(
     "./models/dlib_face_recognition_resnet_model_v1.dat"
 )
 
+# load knn model
+knn_model = joblib.load("svm_classifier.joblib")
+
 top_left_x, top_left_y, bottom_right_x, bottom_right_y = calculate_roi(
     target_width, target_height, roi_width, roi_height
 )
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, target_width)  # resizing the camera's width
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, target_height)  # resizing the camera's height
 
@@ -100,8 +100,6 @@ new_frame_time = 0
 
 while True:
     ret, frame = cap.read()
-
-    frame = cv2.convertScaleAbs(frame, alpha=0.25, beta=0)
 
     # draw roi box
     cv2.rectangle(
@@ -113,26 +111,27 @@ while True:
     )
 
     rect_img = frame[top_left_y:bottom_right_y, top_left_x:bottom_right_x]
-
-    # frame[top_left_y:bottom_right_y, top_left_x:bottom_right_x] = detect_faces(rect_img)
-    result = detect_faces(rect_img)
+    frame[top_left_y:bottom_right_y, top_left_x:bottom_right_x] = detect_faces(rect_img)
 
     new_frame_time = time.time()
     fps = f"[FPS]: {str(int(1 / (new_frame_time - prev_frame_time)))}"
     prev_frame_time = new_frame_time
 
+    cv2.rectangle(frame, (0, 0), (80, 20), (0, 0, 0), -1)
+
     cv2.putText(
         frame,
         fps,
-        (0, 20),
+        (0, 15),
         cv2.FONT_HERSHEY_PLAIN,
         1,
-        (236, 56, 131),
+        (255, 255, 255),
         1,
         cv2.LINE_AA,
     )
 
-    cv2.imshow("face detection demo", result)
+    frame = cv2.resize(frame, (int(frame.shape[1] * 0.5), int(frame.shape[0] * 0.5)))
+    cv2.imshow("face detection demo", frame)
     if cv2.waitKey(1) == ord("q"):
         break
 

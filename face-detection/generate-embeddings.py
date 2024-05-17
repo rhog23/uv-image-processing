@@ -86,7 +86,7 @@ for path in image_paths:
     resized_img = tf.image.resize_with_pad(result, 150, 150).numpy().astype(np.uint8)
 
     # generate 128d embeddings using dlib's model
-    face_desc = np.array(facerec.compute_face_descriptor(resized_img))
+    face_desc = np.array(facerec.compute_face_descriptor(resized_img)).tolist()
 
     list_embeddings.append(face_desc)
 
