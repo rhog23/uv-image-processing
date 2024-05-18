@@ -114,11 +114,11 @@ while True:
                     print("Turn Right")
                     turn_left()
 
-                if cx < 120 and cx > 60:
+                if cx < 120 and cx > 50:
                     print("On Track!")
                     move_forward()
 
-                if cx <= 60:
+                if cx <= 50:
                     print("Turn Left")
                     turn_right()
 
