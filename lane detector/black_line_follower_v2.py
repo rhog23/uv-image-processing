@@ -23,10 +23,10 @@ def setup() -> None:
 
     # sets up ena
     board.set_pin_mode_pwm_output(ena)
-    board.pwm_write(ena, 150)
+    board.pwm_write(ena, 200)
 
     board.set_pin_mode_pwm_output(enb)
-    board.pwm_write(enb, 150)
+    board.pwm_write(enb, 200)
 
     # sets up wheels
     board.set_pin_mode_digital_output(left_motor_FW)
@@ -61,11 +61,11 @@ def move_backward() -> None:
 
 def turn_right() -> None:
     print("[info] turns right")
-    board.digital_pin_write(left_motor_FW, 1)
-    board.digital_pin_write(right_motor_BW, 1)
+    board.digital_pin_write(right_motor_FW, 1)
+    board.digital_pin_write(left_motor_BW, 1)
 
-    board.digital_pin_write(left_motor_BW, 0)
-    board.digital_pin_write(right_motor_FW, 0)
+    board.digital_pin_write(left_motor_FW, 0)
+    board.digital_pin_write(right_motor_BW, 0)
 
     time.sleep(0.1)
     stop_motor()
@@ -73,11 +73,11 @@ def turn_right() -> None:
 
 def turn_left() -> None:
     print("[info] turns left")
-    board.digital_pin_write(right_motor_FW, 1)
-    board.digital_pin_write(left_motor_BW, 1)
+    board.digital_pin_write(left_motor_FW, 1)
+    board.digital_pin_write(right_motor_BW, 1)
 
-    board.digital_pin_write(left_motor_FW, 0)
-    board.digital_pin_write(right_motor_BW, 0)
+    board.digital_pin_write(left_motor_BW, 0)
+    board.digital_pin_write(right_motor_FW, 0)
 
     time.sleep(0.1)
     stop_motor()
@@ -110,11 +110,11 @@ while True:
                     (0, 0, 255),
                     1,
                 )
-                if cx >= 100:
+                if cx >= 90:
                     print("Turn Right")
                     turn_right()
 
-                if cx < 100 and cx > 50:
+                if cx < 90 and cx > 50:
                     print("On Track!")
                     move_forward()
 
