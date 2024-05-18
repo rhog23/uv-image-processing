@@ -59,8 +59,8 @@ def move_backward() -> None:
     board.digital_pin_write(right_motor_BW, 1)
 
 
-def turn_right() -> None:
-    print("[info] turns right")
+def turn_left() -> None:
+    print("[info] turns left")
     board.digital_pin_write(left_motor_FW, 1)
     board.digital_pin_write(right_motor_BW, 1)
 
@@ -71,8 +71,8 @@ def turn_right() -> None:
     stop_motor()
 
 
-def turn_left() -> None:
-    print("[info] turns left")
+def turn_right() -> None:
+    print("[info] turns right")
     board.digital_pin_write(right_motor_FW, 1)
     board.digital_pin_write(left_motor_BW, 1)
 
