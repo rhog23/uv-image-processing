@@ -32,7 +32,8 @@ def get_distance(board, trigger_pin):
 
 def look_right(board, trigger_pin, servo_pin):
     board.servo_write(servo_pin, 50)
-    time.sleep(0.5)
+    # time.sleep(0.5)
+    time.sleep(0.3)
     right_distance = get_distance(board, trigger_pin)
     print(f"[info] look right | distance: {right_distance}")
     time.sleep(0.1)
@@ -43,7 +44,8 @@ def look_right(board, trigger_pin, servo_pin):
 
 def look_left(board, trigger_pin, servo_pin):
     board.servo_write(servo_pin, 170)
-    time.sleep(0.5)
+    # time.sleep(0.5)
+    time.sleep(0.3)
     left_distance = get_distance(board, trigger_pin)
     print(f"[info] look left | distance: {left_distance}")
     time.sleep(0.1)

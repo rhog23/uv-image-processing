@@ -48,19 +48,22 @@ if __name__ == "__main__":
         _, frame = cap.read()
         right_distance = 0
         left_distance = 0
-        time.sleep(0.1)
+        # time.sleep(0.1)
 
         distance = picar.get_distance(board, trigger_pin)
 
         results = model(frame, imgsz=160, max_det=1, conf=0.5)
 
-        if distance <= 55:
+        # if distance <= 55:
+        if distance <= 25:
             picar.stop_motor(board, motor)
-            time.sleep(0.1)
+            time.sleep(0.2)
             picar.move_backward(board, motor)
-            time.sleep(0.5)
+            # time.sleep(0.5)
+            time.sleep(0.3)
             picar.stop_motor(board, motor)
-            time.sleep(0.5)
+            # time.sleep(0.5)
+            time.sleep(0.3)
 
             right_distance = picar.look_right(board, trigger_pin, servo_pin)
             time.sleep(0.5)
