@@ -59,7 +59,13 @@ def open_barrier(board, servo_pins):
 
 def activate_buzzer(board, buzzer_pins):
 
-    pass
+    for buzzer in buzzer_pins:
+        board.play_tone_continuously(buzzer, 1000)
+
+
+def deactivate_buzzer(board, buzzer_pins):
+    for buzzer in buzzer_pins:
+        board.play_tone_off
 
 
 # Function to reset all components
@@ -74,7 +80,7 @@ def reset_components(board, led_pins, servo_pins, buzzer_pins):
         board.digital_write(led, 0)
 
 
-setup(board, servo_pins, ultrasonic_pins)
+setup(board, servo_pins, ultrasonic_pins, buzzer_pins, led_pins)
 
 # Main loop
 while cap.isOpened():
@@ -90,7 +96,7 @@ while cap.isOpened():
 
                 for ultrasonic in ultrasonic_pins:
                     trig, echo = ultrasonic
-                    board.sonar_read(trig, echo)
+                    board.sonar_read(trig)
                     time.sleep(0.01)  # Short delay to allow sonar reading
                     distance, _ = board.sonar_read(trig)
                     distances.append(distance)
@@ -99,6 +105,39 @@ while cap.isOpened():
 
                 print("Jarak 1:", jarak1, "cm")
                 print("Jarak 2:", jarak2, "cm")
+
+                # Perform actions based on distance readings
+                if 2 <= jarak1 <= 10 and not cek2 and not cek1:
+                    cek1 = True
+                    kedip = True
+                    board.servo_write(pinServo1, 90)
+
+                if 2 <= jarak2 <= 10 and not cek1 and not cek2:
+                    cek2 = True
+                    kedip = True
+                    board.servo_write(pinServo1, 90)
+
+                if 2 <= jarak2 <= 10 and cek1:
+                    activate_buzzer(board, buzzer_pins)
+                    time.sleep(1.5)
+                    kedip = False
+                    board.digital_write(pinLed1, 0)
+                    board.digital_write(pinLed2, 0)
+                    open_barrier(board, servo_pins)
+                    cek1 = False
+                    time.sleep(1.5)
+
+                if 2 <= jarak1 <= 10 and cek2:
+                    deactivate_buzzer(board, buzzer_pins)
+                    time.sleep(1.5)
+                    kedip = False
+                    board.digital_write(pinLed1, 0)
+                    board.digital_write(pinLed2, 0)
+                    open_barrier(board, servo_pins)
+                    cek2 = False
+                    time.sleep(1.5)
+        else:
+            reset_components(board, led_pins, servo_pins, buzzer_pins)
 
         # for result in results:
         #     # Check if a train is detected

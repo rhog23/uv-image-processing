@@ -1,6 +1,6 @@
 {
   "python.analysis.autoImportCompletions": true,
   "python.analysis.typeCheckingMode": "basic",
-  "editor.fontSize": 18,
-  "editor.fontFamily": "DM Mono, 'Courier New', monospace"
+  "editor.fontSize": 12,
+  "editor.fontFamily": "JetBrains Mono, 'Courier New', monospace"
 }
