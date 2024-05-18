@@ -110,16 +110,16 @@ while True:
                     (0, 0, 255),
                     1,
                 )
-                if cx >= 120:
-                    print("Turn Right")
+                if cx >= 100:
+                    print("Turn Left")
                     turn_left()
 
-                if cx < 120 and cx > 50:
+                if cx < 100 and cx > 50:
                     print("On Track!")
                     move_forward()
 
                 if cx <= 50:
-                    print("Turn Left")
+                    print("Turn Right")
                     turn_right()
 
                 cv2.circle(frame, (cx, cy), 5, (255, 255, 255), -1)
