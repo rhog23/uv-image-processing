@@ -23,10 +23,10 @@ def setup() -> None:
 
     # sets up ena
     board.set_pin_mode_pwm_output(ena)
-    board.pwm_write(ena, 170)
+    board.pwm_write(ena, 155)
 
     board.set_pin_mode_pwm_output(enb)
-    board.pwm_write(enb, 170)
+    board.pwm_write(enb, 155)
 
     # sets up wheels
     board.set_pin_mode_digital_output(left_motor_FW)
@@ -110,11 +110,11 @@ while True:
                     (0, 0, 255),
                     1,
                 )
-                if cx >= 95:
+                if cx >= 85:
                     print("Turn Right")
                     turn_right()
 
-                if cx < 95 and cx > 50:
+                if cx < 85 and cx > 50:
                     print("On Track!")
                     move_forward()
 
