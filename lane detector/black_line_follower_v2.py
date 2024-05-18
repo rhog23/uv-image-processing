@@ -23,10 +23,10 @@ def setup() -> None:
 
     # sets up ena
     board.set_pin_mode_pwm_output(ena)
-    board.pwm_write(ena, 130)
+    board.pwm_write(ena, 150)
 
     board.set_pin_mode_pwm_output(enb)
-    board.pwm_write(enb, 130)
+    board.pwm_write(enb, 150)
 
     # sets up wheels
     board.set_pin_mode_digital_output(left_motor_FW)
@@ -59,8 +59,8 @@ def move_backward() -> None:
     board.digital_pin_write(right_motor_BW, 1)
 
 
-def turn_left() -> None:
-    print("[info] turns left")
+def turn_right() -> None:
+    print("[info] turns right")
     board.digital_pin_write(left_motor_FW, 1)
     board.digital_pin_write(right_motor_BW, 1)
 
@@ -71,8 +71,8 @@ def turn_left() -> None:
     stop_motor()
 
 
-def turn_right() -> None:
-    print("[info] turns right")
+def turn_left() -> None:
+    print("[info] turns left")
     board.digital_pin_write(right_motor_FW, 1)
     board.digital_pin_write(left_motor_BW, 1)
 
@@ -112,7 +112,7 @@ while True:
                 )
                 if cx >= 100:
                     print("Turn Right")
-                    turn_left()
+                    turn_right()
 
                 if cx < 100 and cx > 50:
                     print("On Track!")
@@ -120,7 +120,7 @@ while True:
 
                 if cx <= 50:
                     print("Turn Left")
-                    turn_right()
+                    turn_left()
 
                 cv2.circle(frame, (cx, cy), 5, (255, 255, 255), -1)
                 cv2.drawContours(frame, c, -1, (0, 255, 0), 1)
