@@ -110,11 +110,11 @@ while True:
                     (0, 0, 255),
                     1,
                 )
-                if cx >= 85:
+                if cx >= 95:
                     print("Turn Right")
                     turn_right()
 
-                if cx < 85 and cx > 50:
+                if cx < 95 and cx > 50:
                     print("On Track!")
                     move_forward()
 
