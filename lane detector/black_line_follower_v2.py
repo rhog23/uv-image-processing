@@ -2,7 +2,7 @@ import cv2, rpicar, sys, time
 import numpy as np
 from pymata4 import pymata4
 
-cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+cap = cv2.VideoCapture(0)
 cap.set(3, 160)
 cap.set(4, 120)
 
