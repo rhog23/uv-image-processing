@@ -23,10 +23,10 @@ def setup() -> None:
 
     # sets up ena
     board.set_pin_mode_pwm_output(ena)
-    board.pwm_write(ena, 180)
+    board.pwm_write(ena, 170)
 
     board.set_pin_mode_pwm_output(enb)
-    board.pwm_write(enb, 180)
+    board.pwm_write(enb, 170)
 
     # sets up wheels
     board.set_pin_mode_digital_output(left_motor_FW)
