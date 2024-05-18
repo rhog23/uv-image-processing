@@ -14,7 +14,7 @@ ena_pin = 11
 enb_pin = 12
 
 motor_speed = (
-    75  #  changes the current to ena and enb pin resulting in changes of speed
+    150  #  changes the current to ena and enb pin resulting in changes of speed
 )
 
 # Servo's Pin
@@ -42,7 +42,7 @@ if __name__ == "__main__":
         task="detect",
     )
 
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
     while True:
         _, frame = cap.read()
@@ -112,8 +112,9 @@ if __name__ == "__main__":
                             sys.exit()
                     else:
                         continue
-
+        cv2.imshow("result", frame)
         if cv2.waitKey(1) == ord("q"):
+            picar.stop_motor(board, motor)
             break
 
     cap.release()
