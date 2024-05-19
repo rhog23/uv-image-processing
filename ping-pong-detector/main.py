@@ -109,7 +109,7 @@ while True:
                         sys.exit()
                 else:
                     continue
-    cv2.imshow("result", frame)
+    # cv2.imshow("result", frame)
     if cv2.waitKey(1) == ord("q"):
         picar.stop_motor(board, motor)
         break
