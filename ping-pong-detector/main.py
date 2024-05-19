@@ -49,7 +49,7 @@ while True:
     results = model(frame, imgsz=160, max_det=1, conf=0.5)
 
     # if distance <= 55:
-    if distance <= 25:
+    if distance <= 30:
         picar.stop_motor(board, motor)
         time.sleep(0.2)
         picar.move_backward(board, motor)
