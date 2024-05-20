@@ -10,7 +10,7 @@ while True:
     data, vertices_array, binary_qrcode = detector.detectAndDecode(frame)
 
     if vertices_array is not None:
-        print(data)
+        print(data, type(data))
 
     cv2.imshow("result", frame)
     if cv2.waitKey(1) == ord("q"):

@@ -1,6 +1,9 @@
-import cv2, rpicar, sys, time
+from tracemalloc import stop
+import cv2, sys, time
 import numpy as np
 from pymata4 import pymata4
+
+detector = cv2.QRCodeDetector()  # pendeteksi qr
 
 cap = cv2.VideoCapture(0)
 cap.set(3, 160)
@@ -90,6 +93,19 @@ while True:
         # time.sleep(2)
         move_forward()
         ret, frame = cap.read()
+        data, vertices_array, binary_qrcode = detector.detectAndDecode(frame)
+
+        if vertices_array is not None:
+            if data == "1":
+                stop_motor()
+                time.sleep(3)
+            if data == "2":
+                stop_motor()
+                time.sleep(3)
+            if data == "3":
+                stop_motor()
+                time.sleep(3)
+
         gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         blurred_frame = cv2.GaussianBlur(gray_frame, (7, 7), 0)
         mask = cv2.inRange(blurred_frame, 0, 120)
@@ -129,8 +145,6 @@ while True:
             stop_motor()
 
         result = np.hstack([frame, cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)])
-        # cv2.imshow("Mask", mask)
-        # cv2.imshow("Frame", frame)
         cv2.imshow("Frame", result)
 
         if cv2.waitKey(1) & 0xFF == ord("q"):  # 1 is the time in ms
