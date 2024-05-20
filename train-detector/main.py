@@ -4,14 +4,14 @@ from pymata4 import pymata4
 from ultralytics import YOLO
 
 # Define pin mappings
-echoPin1 = 0
-trigPin1 = 1
+echoPin1 = 13
+trigPin1 = 12
 echoPin2 = 2
 trigPin2 = 3
 pinBuzzer1 = 4
 pinBuzzer2 = 5
 pinServo1 = 6
-pinServo2 = 7
+pinServo2 = 7  # error (cycling intensly)
 pinLed1 = 8
 pinLed2 = 9
 
@@ -20,12 +20,12 @@ board = pymata4.Pymata4()
 
 # Setup ultrasonic sensors and servos
 ultrasonic_pins = [(trigPin1, echoPin1), (trigPin2, echoPin2)]
-servo_pins = [pinServo1, pinServo2]
+servo_pins = [pinServo1]
 buzzer_pins = [pinBuzzer1, pinBuzzer2]
 led_pins = [pinLed1, pinLed2]
 
 # Initialize YOLO model
-model = YOLO("models/toy-train-det-01_openvino_model", task="detect")
+model = YOLO("train-detector/models/toy-train-det-01.pt", task="detect")
 
 # Open the webcam
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
@@ -53,19 +53,39 @@ def setup(board, servo_pins, ultrasonic_pins, buzzer_pins, led_pins):
 def open_barrier(board, servo_pins):
     for pos in range(90, -1, -1):
         board.servo_write(servo_pins[0], pos)
-        board.servo_write(servo_pins[1], pos)
-        time.sleep(0.05)
+        # board.servo_write(servo_pins[1], pos)
+        time.sleep(0.01)
 
 
 def activate_buzzer(board, buzzer_pins):
-
     for buzzer in buzzer_pins:
         board.play_tone_continuously(buzzer, 1000)
 
 
 def deactivate_buzzer(board, buzzer_pins):
     for buzzer in buzzer_pins:
-        board.play_tone_off
+        board.play_tone_off(buzzer)
+
+
+def kedips(board, led_pins, buzzer_pins):
+    board.play_tone_continuously(buzzer_pins[0], 330)
+
+    for led in led_pins:
+        board.digital_write(led, 1)
+    time.sleep(0.05)
+
+    board.play_tone_off(buzzer_pins[0])
+
+    for led in led_pins:
+        board.digital_write(led, 0)
+
+    board.play_tone_continuously(buzzer_pins[1], 262)
+    time.sleep(0.05)
+
+    board.play_tone_off(buzzer_pins[1])
+
+    for led in led_pins:
+        board.digital_write(led, 0)
 
 
 # Function to reset all components
@@ -105,6 +125,9 @@ while cap.isOpened():
 
                 print("Jarak 1:", jarak1, "cm")
                 print("Jarak 2:", jarak2, "cm")
+
+                if kedip:
+                    kedips(board, led_pins, buzzer_pins)
 
                 # Perform actions based on distance readings
                 if 2 <= jarak1 <= 10 and not cek2 and not cek1:
@@ -204,6 +227,7 @@ while cap.isOpened():
 
         # Break the loop if 'q' is pressed
         if cv2.waitKey(1) & 0xFF == ord("q"):
+            reset_components(board, led_pins, servo_pins, buzzer_pins)
             break
     else:
         # Break the loop if the end of the video is reached
