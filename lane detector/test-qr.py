@@ -1,8 +1,5 @@
 import pyqrcode, cv2
 
-# qr_generated = pyqrcode.create("1")
-# qr_generated.png("qr.png", scale=5)
-
 detector = cv2.QRCodeDetector()
 
 cap = cv2.VideoCapture(0)
