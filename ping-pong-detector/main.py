@@ -4,7 +4,8 @@ import picar, pathlib
 from pymata4 import pymata4
 from ultralytics import YOLO
 
-model_path = "models/pingpong-tflite/pingpong-det-small_int8.tflite"
+# model_path = "models/pingpong-tflite/pingpong-det-small_int8.tflite"
+model_path = "models/ping-pong-det_saved_model/ping-pong-det_int8.tflite"
 
 # Ultrasonic Sensor's Pin
 trigger_pin = 8  #  digital input 8
@@ -46,7 +47,7 @@ while True:
     # time.sleep(0.1)
 
     distance = picar.get_distance(board, trigger_pin)
-    results = model(frame, imgsz=160, max_det=1, conf=0.5)
+    results = model(frame, imgsz=160, max_det=1, conf=0.7)
 
     # if distance <= 55:
     if distance <= 35:
@@ -109,7 +110,7 @@ while True:
                         sys.exit()
                 else:
                     continue
-    # cv2.imshow("result", frame)
+    cv2.imshow("result", frame)
     if cv2.waitKey(1) == ord("q"):
         picar.stop_motor(board, motor)
         break

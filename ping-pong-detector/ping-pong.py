@@ -1,35 +1,28 @@
-import pyfirmata
-import time
+import cv2
+from ultralytics import YOLO
 
-board = pyfirmata.Arduino("COM3")
+model = YOLO("models/ping-pong-det_saved_model/ping-pong-det_int8.tflite", task="detect")
+# clahe = cv2.createCLAHE(clipLimit=5.0, tileGridSize=(2, 2))
 
-start = 0
-end = 0
-
-echo = board.get_pin("d:11:i")
-trig = board.get_pin("d:12:o")
-
-it = pyfirmata.util.Iterator(board)
-it.start()
-
-trig.write(0)
-time.sleep(2)
+cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
 while True:
-    time.sleep(0.5)
+    _, frame = cap.read()
+    # ycrcb_img = cv2.cvtColor(frame, cv2.COLOR_BGR2YCrCb)
 
-    trig.write(1)
-    time.sleep(0.00001)
-    trig.write(0)
+    # ycrcb_img[:, :, 0] = clahe.apply(ycrcb_img[:, :, 0])
 
-    print(echo.read())
-    while echo.read() == False:
-        start = time.time()
+    # equalized_img = cv2.cvtColor(ycrcb_img, cv2.COLOR_YCrCb2BGR)
 
-    while echo.read() == True:
-        end = time.time()
+    results = model(frame, imgsz=160, conf=0.6)
 
-    TimeElapsed = end - start
-    distance = (TimeElapsed * 34300) / 2
+    for result in results:
+        annotated_image = result.plot()
 
-    print("Measured Distance = {} cm".format(distance))
+    cv2.imshow("result", annotated_image)
+
+    if cv2.waitKey(1) == ord("q"):
+        break
+
+cap.release()
+cv2.destroyAllWindows()
