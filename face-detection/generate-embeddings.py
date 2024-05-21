@@ -1,10 +1,11 @@
-import os, cv2, dlib
 import numpy as np
-import pandas as pd
-import logging, keras
+
+# import pandas as pd
 import tensorflow as tf
 from pathlib import Path
+from backbones import get_model
 from centerface import CenterFace
+import logging, keras, os, cv2, dlib, torch, pickle
 
 logging.basicConfig(level=logging.INFO)
 
@@ -35,6 +36,15 @@ def load_image(path, target_width=0, target_height=0, preserve_ratio=True):
     )  # always convert type as np.uint8 if we want to show the image using opencv
 
 
+def preprocess_face(img):
+    resized = tf.image.resize_with_pad(img, 112, 112).numpy().astype(np.uint8)
+    transposed = np.transpose(resized, (2, 0, 1))
+    result = torch.from_numpy(transposed).unsqueeze(0).float()
+    result.div_(255).sub_(0.5).div_(0.5)
+
+    return result
+
+
 def detect_face(img, detector):
     cropped_image = None
     height, width = img.shape[:2]
@@ -62,13 +72,25 @@ def detect_face(img, detector):
     return cropped_image
 
 
+@torch.no_grad()
+def inference(img, net):
+    feat = net(img)
+    return feat.numpy()
+
+
 # instantiate CenterFace
 face_detector = CenterFace()
 
 # load dlib's face recognition model
-facerec = dlib.face_recognition_model_v1(
-    "./models/dlib_face_recognition_resnet_model_v1.dat"
+# facerec = dlib.face_recognition_model_v1(
+#     "./models/dlib_face_recognition_resnet_model_v1.dat"
+# )
+
+net = get_model("edgeface_xs_gamma_06", fp16=False)
+net.load_state_dict(
+    torch.load("checkpoints/edgeface_xs_gamma_06.pt", map_location="cpu")
 )
+net.eval()
 
 for path in image_paths:
     img_source = load_image(path, target_width, target_height)  # loads image
@@ -83,21 +105,29 @@ for path in image_paths:
 
     # resize the cropped face into 150 x 150 (as required by dlib's model);
     # adds padding to prevent changing the structure of the face
-    resized_img = tf.image.resize_with_pad(result, 150, 150).numpy().astype(np.uint8)
+    # resized_img = tf.image.resize_with_pad(result, 150, 150).numpy().astype(np.uint8)
+    resized_img = preprocess_face(result)
 
     # generate 128d embeddings using dlib's model
-    face_desc = np.array(facerec.compute_face_descriptor(resized_img)).tolist()
+    # face_desc = np.array(facerec.compute_face_descriptor(resized_img)).tolist()
 
-    list_embeddings.append(face_desc)
+    # generate 512d embbeddings using edgeface's model
+    face_desc = inference(resized_img, net)
+
+    list_embeddings.append(face_desc[0])
 
 # dictionary of names and the associated facial embeddings
 data = {"name": list_names, "embedding": list_embeddings}
 
+f = open("embeddings.pickle", "wb")
+f.write(pickle.dumps(data))
+f.close()
+
 # create dataframe and saving to .csv
-df = pd.DataFrame(data)
+# df = pd.DataFrame(data)
 
 # saving dataframe
-df.to_csv("facial-embeddings.csv")
+# df.to_csv("facial-embeddings-v2.csv")
 
 # sanity check
-print(df.head())
+# print(df.head())
