@@ -2,11 +2,11 @@ import cv2
 from ultralytics import YOLO
 
 # Load the YOLOv8 model
-model = YOLO("toy-train-det-01.pt", task="detect")
+model = YOLO("models/toy-train-det-01.pt", task="detect")
 
 # Open the video file
 video_path = "VID-20240402-WA0001.mp4"
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 
 # Loop through the video frames
 while cap.isOpened():

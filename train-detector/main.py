@@ -111,6 +111,7 @@ while cap.isOpened():
         # Run YOLOv8 inference on the frame
         results = model(frame, max_det=1)
         if len(results[0].boxes.cls) != 0:
+            # Checks whether the class is train (0)
             if results[0].boxes.cls[0] == 0:
                 distances = []
 
@@ -161,63 +162,6 @@ while cap.isOpened():
                     time.sleep(1.5)
         else:
             reset_components(board, led_pins, servo_pins, buzzer_pins)
-
-        # for result in results:
-        #     # Check if a train is detected
-        #     print(result.boxes.cls)
-        #     train_detected = True  # Assuming 'train' is the label for the toy train
-
-        #     if train_detected:
-        #         # Get the distances from ultrasonic sensors
-        #         distances = []
-        #         for trig, echo in ultrasonic_pins:
-        #             board.sonar_read(trig, echo)
-        #             time.sleep(0.1)  # Short delay to allow sonar reading
-        #             distance = board.get_sonar_data(trig)
-        #             distances.append(
-        #                 distance[1] / 58.0 if distance else float("inf")
-        #             )  # Convert microseconds to cm
-
-        #         jarak1, jarak2 = distances
-
-        #         print("Jarak 1:", jarak1, "cm")
-        #         print("Jarak 2:", jarak2, "cm")
-
-        #         # Perform actions based on distance readings
-        #         if 2 <= jarak1 <= 10 and not cek2 and not cek1:
-        #             cek1 = True
-        #             kedip = True
-        #             move_servo(pinServo1, 90)
-
-        #         if 2 <= jarak2 <= 10 and not cek1 and not cek2:
-        #             cek2 = True
-        #             kedip = True
-        #             move_servo(pinServo1, 90)
-
-        #         if 2 <= jarak2 <= 10 and cek1:
-        #             board.no_tone(pinBuzzer1)
-        #             board.no_tone(pinBuzzer2)
-        #             time.sleep(1.5)
-        #             kedip = False
-        #             board.digital_write(pinLed1, 0)
-        #             board.digital_write(pinLed2, 0)
-        #             open_barrier()
-        #             cek1 = False
-        #             time.sleep(1.5)
-
-        #         if 2 <= jarak1 <= 10 and cek2:
-        #             board.no_tone(pinBuzzer1)
-        #             board.no_tone(pinBuzzer2)
-        #             time.sleep(1.5)
-        #             kedip = False
-        #             board.digital_write(pinLed1, 0)
-        #             board.digital_write(pinLed2, 0)
-        #             open_barrier()
-        #             cek2 = False
-        #             time.sleep(1.5)
-        #     else:
-        #         # Reset all components if no train is detected
-        #         reset_components()
 
         # # Visualize the results on the frame
         annotated_frame = results[0].plot()
