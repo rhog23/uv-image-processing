@@ -38,7 +38,7 @@ picar.setup(board, trigger_pin, echo_pin, servo_pin, motor, ena, motor_speed)
 
 model = YOLO(model_path, task="detect")
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
 while True:
     _, frame = cap.read()
@@ -75,7 +75,7 @@ while True:
 
                     print("Area: ", (w - x) * (h - y))
 
-                    if (w - x) * (h - y) > 10000:
+                    if (w - x) * (h - y) > 35000:
                         picar.stop_motor(board, motor)
                         print("Found pingpong ball!")
                         sys.exit()
