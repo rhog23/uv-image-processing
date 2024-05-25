@@ -119,13 +119,14 @@ while True:
                 cy = int(M["m01"] / M["m00"])
                 cv2.putText(
                     frame,
-                    f"CX : {str(cx)} , CY : {str(cy)}",
+                    f"CX : {str(cx)}",
                     (10, 10),
                     cv2.FONT_HERSHEY_SIMPLEX,
                     0.5,
                     (0, 0, 255),
                     1,
                 )
+                # if cx >= 85:
                 if cx >= 85:
                     print("Turn Right")
                     turn_right()

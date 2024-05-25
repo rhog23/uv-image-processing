@@ -49,35 +49,6 @@ while True:
     distance = picar.get_distance(board, trigger_pin)
     results = model(frame, imgsz=160, max_det=1, conf=0.7)
 
-    # if distance <= 55:
-    if distance <= 35:
-        picar.stop_motor(board, motor)
-        time.sleep(0.2)
-        picar.move_backward(board, motor)
-        # time.sleep(0.5)
-        time.sleep(0.3)
-        picar.stop_motor(board, motor)
-        # time.sleep(0.5)
-        time.sleep(0.3)
-
-        right_distance = picar.look_right(board, trigger_pin, servo_pin)
-        time.sleep(0.5)
-        left_distance = picar.look_left(board, trigger_pin, servo_pin)
-        time.sleep(0.5)
-
-        if right_distance > left_distance:
-            picar.turn_right(board, motor)
-            picar.stop_motor(board, motor)
-
-        elif right_distance < left_distance:
-            picar.turn_left(board, motor)
-            picar.stop_motor(board, motor)
-
-        else:
-            picar.move_forward(board, motor)
-    else:
-        picar.move_forward(board, motor)
-
     if len(results) > 0:
         for result in results:
             for box in result.boxes:
@@ -110,6 +81,36 @@ while True:
                         sys.exit()
                 else:
                     continue
+
+    # if distance <= 55:
+    if distance <= 35:
+        picar.stop_motor(board, motor)
+        time.sleep(0.2)
+        picar.move_backward(board, motor)
+        # time.sleep(0.5)
+        time.sleep(0.3)
+        picar.stop_motor(board, motor)
+        # time.sleep(0.5)
+        time.sleep(0.3)
+
+        right_distance = picar.look_right(board, trigger_pin, servo_pin)
+        time.sleep(0.5)
+        left_distance = picar.look_left(board, trigger_pin, servo_pin)
+        time.sleep(0.5)
+
+        if right_distance > left_distance:
+            picar.turn_right(board, motor)
+            picar.stop_motor(board, motor)
+
+        elif right_distance < left_distance:
+            picar.turn_left(board, motor)
+            picar.stop_motor(board, motor)
+
+        else:
+            picar.move_forward(board, motor)
+    else:
+        picar.move_forward(board, motor)
+
     cv2.imshow("result", frame)
     if cv2.waitKey(1) == ord("q"):
         picar.stop_motor(board, motor)
