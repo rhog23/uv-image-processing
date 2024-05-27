@@ -1,7 +1,7 @@
 import cv2
 import pytesseract
 
-img = cv2.imread("pyimagesearch_address-768x399.jpg")
+img = cv2.imread("lane detector/pyimagesearch_address-768x399.jpg")
 
 h, w, c = img.shape
 boxes = pytesseract.image_to_boxes(img)

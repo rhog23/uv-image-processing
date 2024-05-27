@@ -97,12 +97,15 @@ while True:
 
         if vertices_array is not None:
             if data == "1":
+                print(data)
                 stop_motor()
                 time.sleep(3)
             if data == "2":
+                print(data)
                 stop_motor()
                 time.sleep(3)
             if data == "3":
+                print(data)
                 stop_motor()
                 time.sleep(3)
 
