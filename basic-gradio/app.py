@@ -1,8 +1,8 @@
-import gradio as gr
+import gra  dio as gr
 
 
 def greet(name):
-    return f"Hello, {name}"
+    return f"Hello, {name}  "
 
 
 demo = gr.Interface(
