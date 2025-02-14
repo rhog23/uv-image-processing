@@ -21,7 +21,7 @@ def detect_face(img):
 
     x_min, y_min, x_max, y_max = 0, 0, 0, 0
 
-    dets, _ = centerface(img, tinggi, lebar, threshold=0.5)
+    dets, _ = centerface(img, tinggi, lebar, threshold=0.25)
 
     if len(dets) == 1:
         for det in dets:
