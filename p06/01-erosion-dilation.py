@@ -1,14 +1,13 @@
-import cv2, sys
-import numpy as np
 import argparse
+import sys
+import cv2
 
-src = None
-max_elem = 2
-max_kernel_size = 10
-title_trackbar_element_shape = "Element"
-title_trackbar_kernel_size = "Kernel size"
-title_erosion_window = "Erosion Demo"
-title_dilation_window = "Dilation Demo"
+max_elem: int = 2
+max_kernel_size: int = 10
+title_trackbar_element_shape: str = "Element"
+title_trackbar_kernel_size: str = "Kernel size"
+title_erosion_window: str = "Erosion Demo"
+title_dilation_window: str = "Dilation Demo"
 
 
 def main(image):
