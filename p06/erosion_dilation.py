@@ -1,5 +1,4 @@
 import argparse
-import sys
 import cv2
 import functools
 
@@ -7,7 +6,7 @@ max_se: int = (
     2  # variabel yang menyimpan banyaknya jenis structuring element (se). di dalam kasus ini ada 3 jenis (0, 1, 2)
 )
 max_kernel_size: int = (
-    20  # variabel yang menyimpan jenis dari kernel. di dalam kasus ini ada 10 jenis. Ukuran dari kernel selalu bernilai ganjil
+    20  # variabel yang menyimpan jenis dari kernel. di dalam kasus ini ada 20 jenis.
 )
 title_trackbar_element_shape: str = (
     "Element"  # nama dari trackbar yang digunakan untuk memilih jenis se
@@ -144,10 +143,11 @@ def main(image_path):
         )
 
         # Initial display
-        erosion(1, src)
-        dilation(1, src)
+        erosion(0, src)
+        dilation(0, src)
 
-        cv2.waitKey()
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
     except Exception as e:
         print(f"!!!Terjadi kesalahan!!!\nINFO: {e}")
 
@@ -155,5 +155,7 @@ def main(image_path):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--image", type=str, required=True, help="Path to image")
+    parser.add_argument("--name", type=str, default="John Doe", help="Demo nama anda!")
     args = parser.parse_args()
+    print(args)
     main(args.image)

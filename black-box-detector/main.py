@@ -40,8 +40,8 @@ def detect_black_box(image):
                 cv2.LINE_AA,
             )
 
-    return image
-    # return np.expand_dims(threshInv, axis=-1)
+    # return image
+    return np.expand_dims(mask, axis=-1)
 
 
 while True:
