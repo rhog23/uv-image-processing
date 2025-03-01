@@ -32,13 +32,13 @@ def process_frame(frame, method):
     segmented_rgb = cv2.cvtColor(segmented, cv2.COLOR_GRAY2RGB)
 
     # Kembalikan frame asli dan hasil segmentasi
-    return frame, segmented_rgb
+    yield frame, segmented_rgb
 
 
-# Fungsi untuk streaming video dari webcam
+# Fungsi untuk streaming video dari webcam menggunakan cv2.VideoCapture
 def video_stream(method):
-    # Buka webcam (0 adalah kamera default)
-    cap = cv2.VideoCapture(0)
+    # Buka webcam (ganti indeks sesuai kamera Anda, misalnya 0 atau 1)
+    cap = cv2.VideoCapture(1)
 
     if not cap.isOpened():
         raise RuntimeError("Could not open webcam")
@@ -62,10 +62,10 @@ def video_stream(method):
     cap.release()
 
 
-# Buat antarmuka Gradio
-interface = gr.Interface(
-    fn=video_stream,  # Fungsi yang mengaktifkan webcam dan memproses stream
-    inputs=gr.Dropdown(
+# Buat antarmuka dengan gr.Blocks
+with gr.Blocks(title="Segmentasi Real-time dengan Pilihan Metode") as demo:
+    # Komponen dropdown untuk memilih metode segmentasi
+    method_dropdown = gr.Dropdown(
         choices=[
             "Global Thresholding (T=127)",
             "Otsu's Thresholding",
@@ -74,15 +74,20 @@ interface = gr.Interface(
             "Triangle Thresholding",
         ],
         label="Pilih Metode Segmentasi",
-    ),  # Dropdown untuk memilih metode segmentasi
-    outputs=[
-        gr.Image(label="Frame Asli", streaming=True),
-        gr.Image(label="Hasil Segmentasi", streaming=True),
-    ],
-    live=True,  # Aktifkan pembaruan real-time
-    title="Segmentasi Real-time dengan Pilihan Metode",
-    description="Pilih metode segmentasi dari dropdown untuk membandingkannya dengan frame asli dari webcam.",
-)
+        value="Otsu's Thresholding",  # Nilai awal
+    )
+
+    # Komponen untuk menampilkan frame asli dan hasil segmentasi
+    with gr.Row():
+        original_output = gr.Image(label="Frame Asli")
+        segmented_output = gr.Image(label="Hasil Segmentasi")
+
+    # Event handler: perbarui output saat dropdown berubah
+    method_dropdown.change(
+        fn=video_stream,
+        inputs=method_dropdown,
+        outputs=[original_output, segmented_output],
+    )
 
 # Jalankan aplikasi
-interface.launch(share=False, server_name="0.0.0.0", server_port=7860)
+demo.launch(share=False, server_name="0.0.0.0", server_port=7860)
