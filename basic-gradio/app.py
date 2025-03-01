@@ -1,4 +1,4 @@
-import gra  dio as gr
+import gradio as gr
 
 
 def greet(name):
