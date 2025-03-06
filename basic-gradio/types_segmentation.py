@@ -48,7 +48,7 @@ def process_frame(frame):
 # Fungsi untuk streaming video dari webcam menggunakan OpenCV
 def video_stream():
     # Buka webcam (0 adalah kamera default)
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(0)
 
     if not cap.isOpened():
         raise RuntimeError("Could not open webcam")

@@ -59,7 +59,7 @@ plt.axvline(
     x=thresh_tri,
     color="purple",
     linestyle="--",
-    label=f"Li's Threshold = {thresh_tri:.2f}",
+    label=f"Triangle's Threshold = {thresh_tri:.2f}",
 )
 
 plt.xlabel("Intensitas Piksel")
