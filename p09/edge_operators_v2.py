@@ -2,14 +2,7 @@ import gradio as gr
 import numpy as np
 from skimage import filters, feature, img_as_ubyte
 from skimage.color import rgb2gray
-from skimage.filters import (
-    gaussian,
-    prewitt_h,
-    prewitt_v,
-    roberts_pos_diag,
-    roberts_neg_diag,
-    laplace,
-)
+from skimage.filters import gaussian, prewitt, laplace, roberts
 
 
 # Fungsi deteksi tepi menggunakan scikit-image
@@ -23,14 +16,10 @@ def detect_edges(image, edge_operator):
         edges = filters.sobel(blur)  # Sobel langsung dari scikit-image
 
     elif edge_operator == "Prewitt":
-        prewitt_x = prewitt_h(blur)  # Horizontal
-        prewitt_y = prewitt_v(blur)  # Vertikal
-        edges = np.sqrt(prewitt_x**2 + prewitt_y**2)
+        edges = prewitt(blur)
 
     elif edge_operator == "Roberts":
-        roberts_x = roberts_pos_diag(blur)  # Diagonal positif
-        roberts_y = roberts_neg_diag(blur)  # Diagonal negatif
-        edges = np.sqrt(roberts_x**2 + roberts_y**2)
+        edges = roberts(blur)
 
     elif edge_operator == "Laplacian":
         edges = laplace(blur)  # Laplacian menghasilkan nilai negatif dan positif
