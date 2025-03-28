@@ -1,6 +1,6 @@
 {
   "python.analysis.autoImportCompletions": true,
   "python.analysis.typeCheckingMode": "basic",
-  "editor.fontSize": 18,
+  "editor.fontSize": 12,
   "editor.fontFamily": "IBM Plex Mono, 'Courier New', monospace"
 }
