@@ -19,8 +19,10 @@ def process_frame(frame):
 
 # Function to capture and process video stream
 def video_stream():
+    ip_camera_url = "http://192.168.137.20:8080/video"
     # Open the webcam (0 is usually the default camera)
-    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    # cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    cap = cv2.VideoCapture(ip_camera_url)
 
     if not cap.isOpened():
         raise RuntimeError("Could not open webcam")
@@ -37,7 +39,7 @@ def video_stream():
         result = process_frame(frame_rgb)
 
         # Yield the processed frame for Gradio's live stream
-        yield result
+        yield cv2.rotate(result, cv2.ROTATE_90_CLOCKWISE)
 
     cap.release()
 
