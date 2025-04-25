@@ -21,8 +21,8 @@ def process_frame(frame):
 def video_stream():
     ip_camera_url = "http://192.168.137.20:8080/video"
     # Open the webcam (0 is usually the default camera)
-    # cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
-    cap = cv2.VideoCapture(ip_camera_url)
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    # cap = cv2.VideoCapture(ip_camera_url)
 
     if not cap.isOpened():
         raise RuntimeError("Could not open webcam")

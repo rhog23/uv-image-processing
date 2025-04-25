@@ -80,7 +80,7 @@ def video():
 # route the app to the webcam detection page
 @app.route("/webcam")
 def webcam():
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
     while cap.isOpened():
         ret, image = cap.read()
         filtered_regions = []
