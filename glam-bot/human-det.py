@@ -23,7 +23,8 @@ def home():
 @app.route("/image")
 def image():
     image = cv2.imread("image.jpg")
-    image = imutils.resize(image, width=min(500, image.shape[1]))
+    # image = imutils.resize(image, width=min(500, image.shape[1]))
+    image = cv2.resize(image, width=min(256, image.shape[1]))
     regions, _ = hog.detectMultiScale(
         image, winStride=(4, 4), padding=(4, 4), scale=1.05
     )
@@ -51,7 +52,8 @@ def video():
     while cap.isOpened():
         ret, image = cap.read()
         if ret:
-            image = imutils.resize(image, width=min(500, image.shape[1]))
+            # image = imutils.resize(image, width=min(500, image.shape[1]))
+            image = cv2.resize(image, width=min(256, image.shape[1]))
             regions, _ = hog.detectMultiScale(
                 image, winStride=(4, 4), padding=(4, 4), scale=1.05
             )
@@ -78,12 +80,15 @@ def video():
 # route the app to the webcam detection page
 @app.route("/webcam")
 def webcam():
-    cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+    cap = cv2.VideoCapture(0)
     while cap.isOpened():
         ret, image = cap.read()
         filtered_regions = []
         if ret:
             image = imutils.resize(image, width=min(256, image.shape[1]))
+            print(image.shape[:2])
+            # imgsz = (256, 256)
+            # image = cv2.resize(image, imgsz)
             regions, _ = hog.detectMultiScale(
                 image,
                 winStride=(8, 8),
