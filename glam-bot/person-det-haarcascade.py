@@ -14,6 +14,9 @@ full_body_cascade = cv2.CascadeClassifier(
     cv2.data.haarcascades + "haarcascade_fullbody.xml"
 )
 
+# Downscale for faster processing (60% of original)
+scale_percent = 60 # modify to your needs
+
 # Global variables for thread communication
 latest_frame = None
 processed_frame = None
@@ -34,14 +37,11 @@ def detection_worker():
                 continue
             frame = latest_frame.copy()
 
+        small_frame = cv2.resize(frame, (width, height))
+
         # Convert to grayscale
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-        # Downscale for faster processing (60% of original)
-        scale_percent = 60
-        width = int(frame.shape[1] * scale_percent / 100)
-        height = int(frame.shape[0] * scale_percent / 100)
-        small_frame = cv2.resize(frame, (width, height))
         small_gray = cv2.resize(gray, (width, height))
 
         # Detect objects with optimized parameters
