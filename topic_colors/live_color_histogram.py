@@ -5,6 +5,7 @@ import numpy as np
 def draw_histogram(img):
     h, w, c = img.shape
     hist_img = np.zeros((300, 512, 3), dtype=np.uint8)
+    cv2.COLOR_
 
     colors = ("b", "g", "r")  # OpenCV uses BGR
     for i, col in enumerate(colors):
