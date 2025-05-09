@@ -6,7 +6,7 @@ box_annotator = sv.BoundingBoxAnnotator()
 mask_annotator = sv.MaskAnnotator()
 label_annotator = sv.LabelAnnotator(text_position=sv.Position.TOP_CENTER)
 # model = YOLO("yolo11n-seg.pt", task="segment")
-model = YOLO("yolo11n_openvino_model", task="detect")
+model = YOLO("model_welding.pt", task="detect")
 
 cap = cv2.VideoCapture(0)
 
