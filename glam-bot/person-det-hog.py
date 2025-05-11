@@ -5,7 +5,7 @@ def hog_body_detection():
     hog = cv2.HOGDescriptor()
     hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
 
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
     while True:
         ret, frame = cap.read()
         if not ret:
@@ -19,13 +19,14 @@ def hog_body_detection():
 
         # HOG detection
         bodies, _ = hog.detectMultiScale(
-            frame_gray, winStride=(8, 8), padding=(8, 8), scale=1.05
+            frame, winStride=(8, 8), padding=(8, 8), scale=1.05
         )
 
         # Draw detections
         for x, y, w, h in bodies:
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
+        cv2.imshow("Gray Frame", frame_gray)
         cv2.imshow("HOG Body Detection", frame)
         if cv2.waitKey(1) == 27:
             break

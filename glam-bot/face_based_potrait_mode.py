@@ -3,7 +3,7 @@ import numpy as np
 
 
 def main():
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
     if not cap.isOpened():
         print("Cannot open webcam")
         return
@@ -22,7 +22,9 @@ def main():
         frame = cv2.resize(frame, (640, 480))
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-        faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)
+        faces = face_cascade.detectMultiScale(
+            gray, scaleFactor=1.05, minNeighbors=8, minSize=(40, 40)
+        )
 
         mask = np.zeros((frame.shape[0], frame.shape[1]), dtype=np.uint8)
 

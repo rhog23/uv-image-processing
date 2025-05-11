@@ -7,10 +7,10 @@ box_annotator = sv.BoundingBoxAnnotator()
 mask_annotator = sv.MaskAnnotator()
 label_annotator = sv.LabelAnnotator(text_position=sv.Position.TOP_CENTER)
 # model = YOLO("yolo11n-seg.pt", task="segment")
-# model = YOLO("yolo11n_openvino_model", task="detect")
-model = YOLO("fruit-det-y12-nadam.pt", task="detect")
+model = YOLO("yolo11n_openvino_model", task="detect")
+# model = YOLO("fruit-det-y12-nadam.pt", task="detect")
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
 
 def draw_bbox_with_centroid(frame, detections):
@@ -61,7 +61,7 @@ while True:
     success, frame = cap.read()
 
     if success:
-        results = model(frame)[0]
+        results = model(frame, classes=[0])[0]
         detections = sv.Detections.from_ultralytics(results)
         labels = [f"{results.names[class_id]}" for class_id in detections.class_id]
 
