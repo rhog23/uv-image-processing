@@ -38,7 +38,7 @@ class FaceDetector:
     def _load_cascades(self) -> None:
         """Loads the Haar cascade classifiers."""
         if not self.frontal_face_cascade.load(
-            f"{cv2.data.haarcascades}{self.frontal_cascade_path}"
+            f"{self.frontal_cascade_path}"
         ):
             error_msg = f"Error loading frontal cascade: {self.frontal_cascade_path}"
             logger.error(error_msg)
@@ -47,7 +47,7 @@ class FaceDetector:
 
         if self.profile_cascade_path and self.profile_face_cascade:
             if not self.profile_face_cascade.load(
-                f"{cv2.data.haarcascades}{self.profile_cascade_path}"
+                f"{self.profile_cascade_path}"
             ):
                 error_msg = (
                     f"Error loading profile cascade file: {self.profile_cascade_path}"
