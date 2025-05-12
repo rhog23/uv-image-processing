@@ -1,20 +1,25 @@
 """Camera configurations"""
 
 import cv2
+import platform
 
 # Camera configuration
-CAMERA_IDX = 0  # 0 for default webcam
+CAMERA_INDEX = 0  # 0 for default webcam
 FRAME_WIDTH = 640
 FRAME_HEIGHT = 480
-USE_DSHOW = True  # use cv2.CAP_DSHOW for better Windows compatibility (if applicable)
+USE_DSHOW = (
+    True if platform.system() == "Windows" else False
+)  # use cv2.CAP_DSHOW for better Windows compatibility (if applicable)
 
 # Cascade classifier configuration
 # for human faces; Other options see: https://github.com/opencv/opencv/tree/4.x/data/haarcascades
-CASCADE_FRONTAL_FACE_PATH = f"{cv2.data.haarcascades}haarcascade_frontalface_alt.xml"
+# CASCADE_FRONTAL_FACE_PATH = f"{cv2.data.haarcascades}haarcascade_frontalface_alt.xml"
+CASCADE_FRONTAL_FACE_PATH = f"haarcascade_frontalface_alt.xml"
 
 # for profile faces (captures both left and right sides of a face)
-CASCADE_PROFILE_FACE_PATH = f"{cv2.data.haarcascades}haarcascade_profileface.xml"  # set to none if you don't require profile detector and comment this code
+# CASCADE_PROFILE_FACE_PATH = f"{cv2.data.haarcascades}haarcascade_profileface.xml"  # set to none if you don't require profile detector and comment this code
 # CASCADE_PROFILE_FACE_PATH = None
+CASCADE_PROFILE_FACE_PATH = f"haarcascade_profileface.xml"
 
 # Detection parameters
 # Shared parameters for both frontal and profile detectors
@@ -46,7 +51,7 @@ CENTROID_RADIUS = 5
 TEXT_COLOR = (255, 255, 255)  # White
 TEXT_FONT = cv2.FONT_HERSHEY_SIMPLEX
 TEXT_FONT_SCALE = 0.5
-TEXT_THICKNESS = 0.75
+TEXT_THICKNESS = 1
 
 # Histogram equalization
 HIST_EQUALIZATION = True  # enable or disable histogram equalization
