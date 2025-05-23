@@ -6,15 +6,16 @@ import numpy as np
 # Function to process each frame
 def process_frame(frame):
     # Convert RGB frame to grayscale (Otsu works on single-channel images)
-    gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
+    hsv = cv2.cvtColor(frame, cv2.COLOR_RGB2HSV)
+    h, s, v = hsv[:, :, 0], hsv[:, :, 1], hsv[:, :, 2]
 
     # Apply Otsu's thresholding
-    _, segmented = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    _, segmented = cv2.threshold(s, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
     # Convert the segmented image back to RGB for display (Gradio expects RGB)
     segmented_rgb = cv2.cvtColor(segmented, cv2.COLOR_GRAY2RGB)
 
-    return segmented_rgb
+    return s
 
 
 # Function to capture and process video stream
@@ -55,4 +56,4 @@ interface = gr.Interface(
 )
 
 # Launch the app, making it accessible over the local network
-interface.launch(share=False, server_name="0.0.0.0", server_port=7860)
+interface.launch(share=False, server_port=7860)

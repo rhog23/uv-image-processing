@@ -7,7 +7,7 @@ board = pymata4.Pymata4()
 # Servo pins
 SERVO_9 = 9
 SERVO_6 = 6
-SERVO_11 = 11
+SERVO_11 = 5
 SERVO_3 = 3  # New servo pin
 
 # Current positions (1500μs is typically center position)

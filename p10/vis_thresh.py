@@ -4,7 +4,7 @@ from skimage import filters
 import matplotlib.pyplot as plt
 
 # Membaca gambar dalam format grayscale
-image = cv2.imread("images/WIN_20230502_21_35_07_Pro.jpg", cv2.IMREAD_GRAYSCALE)
+image = cv2.imread("images/WIN_20250516_20_13_50_Pro.jpg", cv2.IMREAD_GRAYSCALE)
 
 # Menerapkan global thresholding dengan nilai threshold 127 (binary threshold)
 ret_binary, binary_thresh = cv2.threshold(image, 127, 255, cv2.THRESH_BINARY)
@@ -67,3 +67,7 @@ plt.ylabel("Frekuensi")
 plt.title("Histogram Citra serta Nilai Threshold (Ambang) untuk Segmentasi")
 plt.legend()
 plt.show()
+
+# cv2.imshow("image", image)
+# if cv2.waitKey(0) & 0xFF == ord("q"):
+#     cv2.destroyAllWindows()

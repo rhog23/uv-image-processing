@@ -3,7 +3,7 @@ from skimage import filters
 import numpy as np
 
 # Membaca gambar dalam format grayscale
-image = cv2.imread("images/WIN_20230502_21_35_07_Pro.jpg", cv2.IMREAD_GRAYSCALE)
+image = cv2.imread("images/WIN_20250516_20_13_50_Pro.jpg", cv2.IMREAD_GRAYSCALE)
 image = cv2.resize(image, None, fx=0.5, fy=0.5)
 
 # Menerapkan global thresholding dengan nilai threshold 127
