@@ -3,9 +3,10 @@ import numpy as np
 import time
 from collections import Counter
 import socket
+from scipy import stats as st
 
 # Konfigurasi IP ESP32
-esp_ip = "192.168.83.178"  # Ganti dengan IP ESP32 yang muncul di Serial Monitor
+esp_ip = "192.168.30.33"  # Ganti dengan IP ESP32 yang muncul di Serial Monitor
 port = 80
 
 # Inisialisasi socket TCP
@@ -15,14 +16,14 @@ try:
     print("[INFO] Terhubung ke ESP32")
 except Exception as e:
     print("[INFO] Gagal terhubung ke ESP32:", e)
-    # exit()
-    pass
+    exit()
+    # pass
 
 detected_colors = []
 start_time = time.time()
 
 # Pakai kamera USB index 0
-cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
 if not cap.isOpened():
     print("[INFO] Gagal membuka kamera.")
     exit()
@@ -45,14 +46,21 @@ while True:
     # Grayscale dan threshold
     gray_frame = cv2.cvtColor(cropped_frame, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray_frame, (3, 3), 0)
-    _, threshold = cv2.threshold(
-        blurred, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU
-    )
+    _, threshold = cv2.threshold(blurred, 150, 255, cv2.THRESH_BINARY_INV)
 
     # HSV dan ambil hue yang di area threshold
     hsv = cv2.cvtColor(cropped_frame, cv2.COLOR_BGR2HSV)
     hue_channel = hsv[:, :, 0]
+    v_channel = hsv[:, :, 2]
     target_color = hue_channel[threshold == 255]
+    # target_color = st.mode(st.mode(hue_channel).mode).mode
+    masked_frame = cv2.subtract(
+        cv2.cvtColor(threshold, cv2.COLOR_GRAY2BGR), cropped_frame
+    )
+    masked_frame = cv2.subtract(
+        cv2.cvtColor(threshold, cv2.COLOR_GRAY2BGR), masked_frame
+    )
+    dominance_v_channel = st.mode(st.mode(v_channel).mode).mode
 
     # Check LAB
     # lab = cv2.cvtColor(cropped_frame, cv2.COLOR_BGR2LAB)
@@ -60,43 +68,49 @@ while True:
     # target_color = lab_channel[threshold == 255]
 
     warna = ""
+    print(f"[INFO] Mode Value: {dominance_v_channel}")
+    if dominance_v_channel > 10:
+        if target_color.size > 0:
+            # median_hue = target_color
+            # print(f"{target_color}")
+            median_hue = int(np.median(target_color))
 
-    if target_color.size > 0:
-        median_hue = int(np.median(target_color))
-        print("[INFO] Median Hue:", median_hue)
+            print("[INFO] Median Hue:", median_hue)
 
-        if 0 <= median_hue <= 5 or 160 <= median_hue <= 180:
-            warna = "me"
-            print("🔴 Warna: Merah")
-        elif 11 <= median_hue <= 20:
-            warna = "ji"
-            print("🟠 Warna: Oranye")
-        elif 21 <= median_hue <= 35:
-            warna = "ku"
-            print("🟡 Warna: Kuning")
-        elif 36 <= median_hue <= 85:
-            warna = "hi"
-            print("🟢 Warna: Hijau")
-        elif 100 <= median_hue <= 120:
-            warna = "bi"
-            print("🔵 Warna: Biru")
-        elif 125 <= median_hue <= 170:
-            warna = "un"
-            print("🟣 Warna: Ungu")
-        else:
-            warna = "0"
-            print("⚠️ Warna di luar klasifikasi:", median_hue)
+            if 0 <= median_hue <= 5 or 160 <= median_hue <= 180:
+                warna = "me"
+                print("🔴 Warna: Merah")
+            elif 11 <= median_hue <= 20:
+                warna = "ji"
+                print("🟠 Warna: Oranye")
+            elif 21 <= median_hue <= 35:
+                warna = "ku"
+                print("🟡 Warna: Kuning")
+            elif 36 <= median_hue <= 85:
+                warna = "hi"
+                print("🟢 Warna: Hijau")
+            elif 100 <= median_hue <= 120:
+                warna = "bi"
+                print("🔵 Warna: Biru")
+            elif 125 <= median_hue <= 170:
+                warna = "un"
+                print("🟣 Warna: Ungu")
+            else:
+                warna = "0"
+                print("⚠️ Warna di luar klasifikasi:", median_hue)
 
-        detected_colors.append(str.lower(warna))
+            detected_colors.append(str.lower(warna))
     else:
         print("⚠️ Tidak ada warna terdeteksi")
 
     # Tampilkan jendela
     cv2.imshow("Asli", cropped_frame)
-    # cv2.imshow("Hue", hue_channel)
-    cv2.imshow("Hue", lab_channel)
-    cv2.imshow("Asli", blurred)
+    cv2.imshow("Hue", hue_channel)
+    cv2.imshow("Value", v_channel)
+    # cv2.imshow("Hue", lab_channel)
+    cv2.imshow("Blurred", blurred)
     cv2.imshow("Threshold", threshold)
+    cv2.imshow("Threshold", masked_frame)
     # cv2.imshow("Blurred Threshold", thres5)
 
     # Kirim hasil dominan setiap 3 detik
