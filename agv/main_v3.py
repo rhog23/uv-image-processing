@@ -149,5 +149,5 @@ class ColorDetectionSystem:
 
 if __name__ == "__main__":
     # Initialize and run the color input system
-    detector = ColorDetectionSystem(esp_ip="192.168.134.33", port=80)
+    detector = ColorDetectionSystem(esp_ip="172.20.10.2", port=80)
     detector.run()
