@@ -34,8 +34,8 @@ st.write(
 st.write(clean_df["species"].value_counts())
 
 le = LabelEncoder()
-clean_df["island"] = le.fit_transform(clean_df["island"])
-clean_df["sex"] = le.fit_transform(clean_df["sex"])
+clean_df.loc[:, "island"] = le.fit_transform(clean_df.loc[:, "island"])
+clean_df.loc[:, "sex"] = le.fit_transform(clean_df.loc[:, "sex"])
 st.write(clean_df)
 
 # memisahkan antara fitur (X) dan label (y)
