@@ -11,9 +11,12 @@ from sklearn.metrics import (
 )
 from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
-import pickle
+
 import streamlit as st
 import matplotlib.pyplot as plt
+import pickle
+
+st.set_page_config(page_title="Penguin Model Trainer", page_icon=":penguin:")
 
 st.title("Penguins ML Model Trainer :penguin::gear:")
 
