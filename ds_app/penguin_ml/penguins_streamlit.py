@@ -2,6 +2,8 @@ import streamlit as st
 import pickle
 import numpy as np
 
+st.set_page_config(page_title="Penguin Predictor", page_icon=":penguin:")
+
 st.title("Penguin Classifier :penguin::snowman:")
 st.markdown(
     "Curious which penguin you're looking at? Just enter six details below—this app will use a trained model from the Palmer Penguins dataset to make a prediction! We use the RandomForest model for prediction :deciduous_tree:"
