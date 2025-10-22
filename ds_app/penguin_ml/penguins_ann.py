@@ -12,7 +12,6 @@ from sklearn.metrics import (
 )
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 import tensorflow as tf
-from tensorflow.keras.utils import plot_model
 
 import streamlit as st
 import matplotlib.pyplot as plt
