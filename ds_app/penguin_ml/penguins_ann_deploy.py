@@ -29,7 +29,7 @@ st.sidebar.header("Input Features")
 island = st.sidebar.selectbox(
     "Penguin Island", options=["Biscoe", "Dream", "Torgersen"]
 )
-sex = st.sidebar.selectbox("Sex", options=["Female", "Male"])
+sex = st.sidebar.selectbox("Gender", options=["Female", "Male"])
 bill_length = st.sidebar.number_input("Bill Length (mm)", min_value=0.0)
 bill_depth = st.sidebar.number_input("Bill Depth (mm)", min_value=0.0)
 flipper_length = st.sidebar.number_input("Flipper Length (mm)", min_value=0.0)
@@ -73,7 +73,7 @@ input_data[scaled_columns] = scaler.transform(input_data[scaled_columns])
 st.markdown("### Input Preview")
 st.dataframe(input_data)
 
-# melakukan prediksi
+# melakukan prediksi dengan mengklik button
 if st.button("Predict Penguin Species"):
     prediction_probs = ann_model.predict(input_data)[0]
 
