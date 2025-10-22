@@ -48,7 +48,7 @@ new_prediction = rfc.predict_proba(
             bill_depth,
             flipper_length,
             body_mass,
-            gender,
+            gender, 
         ]
     ]
 )
