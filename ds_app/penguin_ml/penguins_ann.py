@@ -122,7 +122,7 @@ disp = ConfusionMatrixDisplay(cm, display_labels=penguin_df["species"].unique())
 disp.plot(ax=ax, cmap="Blues", colorbar=False)
 st.write(fig)
 
-# performa dari random forest
+# performa dari artificial neural network (ANN)
 accuracy = accuracy_score(y_test, y_pred_classes)
 precision = precision_score(y_test, y_pred_classes, average="macro")
 recall = recall_score(y_test, y_pred_classes, average="macro")
