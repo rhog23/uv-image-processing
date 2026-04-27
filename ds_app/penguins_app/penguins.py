@@ -33,3 +33,10 @@ alt_chart = (
     .interactive() # memungkinkan kita untuk zoom-in / out
 )
 st.altair_chart(alt_chart)
+
+
+
+full_df = pd.read_csv("gas_sensor.csv")
+
+subset_df = full_df[:, ["MQ2", "MQ6", "MQ7", "Gas"]]
+

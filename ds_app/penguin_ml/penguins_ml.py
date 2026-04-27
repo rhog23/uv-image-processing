@@ -15,6 +15,7 @@ from sklearn.ensemble import RandomForestClassifier
 import streamlit as st
 import matplotlib.pyplot as plt
 import pickle
+import joblib
 
 st.set_page_config(page_title="Penguin Model Trainer", page_icon=":penguin:")
 
@@ -34,8 +35,8 @@ st.write(
 st.write(clean_df["species"].value_counts())
 
 le = LabelEncoder()
-clean_df.loc[:, "island"] = le.fit_transform(clean_df.loc[:, "island"])
-clean_df.loc[:, "sex"] = le.fit_transform(clean_df.loc[:, "sex"])
+clean_df["island"] = le.fit_transform(clean_df["island"])
+clean_df["sex"] = le.fit_transform(clean_df["sex"])
 st.write(clean_df)
 
 # memisahkan antara fitur (X) dan label (y)
@@ -79,7 +80,10 @@ st.subheader("Laporan Klasifikasi :memo:")
 st.dataframe(report_df)
 
 
-# Menyimpan model
-rf_pickle = open("random_forest_penguin.pickle", "wb")
-pickle.dump(rfc, rf_pickle)
-rf_pickle.close()
+# Menyimpan model --> format pickle
+# rf_pickle = open("random_forest_penguin.pickle", "wb")
+# pickle.dump(rfc, rf_pickle)
+# rf_pickle.close()
+
+# Menyimpoan model --> format joblib
+joblib.dump(rfc, "random_forest_penguin.joblib")

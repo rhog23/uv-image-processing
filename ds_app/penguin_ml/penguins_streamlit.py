@@ -1,5 +1,6 @@
 import streamlit as st
 import pickle
+import joblib
 import numpy as np
 
 st.set_page_config(page_title="Penguin Predictor", page_icon=":penguin:")
@@ -16,6 +17,8 @@ rf_pickle = open("random_forest_penguin.pickle", "rb")
 rfc = pickle.load(rf_pickle)
 rf_pickle.close()
 
+# me-load file joblib
+rfc = joblib.load("random_forest_penguin.joblib")
 
 island = st.selectbox("Penguin Island", options=["Biscoe", "Dream", "Torgerson"])
 sex = st.selectbox("Sex", options=["Female", "Male"])
