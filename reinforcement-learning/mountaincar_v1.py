@@ -4,7 +4,7 @@ import gymnasium as gym
 env = gym.make("MountainCar-v0", render_mode="human")
 
 # Reset awal
-observation, info = env.reset(seed=42)
+observation, info = env.reset(seed=3)
 
 for step in range(500):  # max 500 steps
     action = env.action_space.sample()  # random action

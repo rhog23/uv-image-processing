@@ -5,7 +5,7 @@ import numpy as np
 def motion_based_detection():
     back_sub = cv2.createBackgroundSubtractorMOG2(history=500, varThreshold=25)
 
-    cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
     while True:
         ret, frame = cap.read()
         if not ret:

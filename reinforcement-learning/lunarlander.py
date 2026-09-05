@@ -4,10 +4,10 @@ import gymnasium as gym
 env = gym.make("LunarLander-v3", render_mode="human")
 
 # Reset the environment
-observation, info = env.reset(seed=42)
+observation, info = env.reset(seed=3)
 print(info)
 
-for step in range(1000):
+for step in range(2000):
     action = env.action_space.sample()  # random action
     observation, reward, terminated, truncated, info = env.step(action)
 

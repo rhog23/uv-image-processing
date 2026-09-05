@@ -15,7 +15,7 @@ full_body_cascade = cv2.CascadeClassifier(
 )
 
 # Downscale for faster processing (60% of original)
-scale_percent = 60 # modify to your needs
+scale_percent = 60  # modify to your needs
 
 # Global variables for thread communication
 latest_frame = None
@@ -37,20 +37,23 @@ def detection_worker():
                 continue
             frame = latest_frame.copy()
 
-        small_frame = cv2.resize(frame, (width, height))
+        width, height = int(frame.shape[1]), int(frame.shape[0])
+
+        # small_frame = cv2.resize(frame, (width, height))
 
         # Convert to grayscale
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        # gray = cv2.cvtColor(small_frame, cv2.COLOR_BGR2GRAY)
 
-        small_gray = cv2.resize(gray, (width, height))
+        # small_gray = cv2.resize(gray, (width, height))
 
         # Detect objects with optimized parameters
         faces = face_cascade.detectMultiScale(
-            small_gray, scaleFactor=1.05, minNeighbors=4, minSize=(40, 40)
+            frame, scaleFactor=1.05, minNeighbors=4, minSize=(40, 40)
         )
 
         full_bodies = full_body_cascade.detectMultiScale(
-            small_gray, scaleFactor=1.05, minNeighbors=4, minSize=(60, 60)
+            frame, scaleFactor=1.05, minNeighbors=4, minSize=(60, 60)
         )
 
         # Scale detections back to original size
@@ -115,7 +118,7 @@ def main():
     global latest_frame, running
 
     # Open webcam
-    cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
     if not cap.isOpened():
         print("Error: Could not open webcam")
         return
